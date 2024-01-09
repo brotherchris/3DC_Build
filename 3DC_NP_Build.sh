@@ -11,10 +11,10 @@ PARM_SAVE=~/ParmSave_$date.txt
 y_tube_long=115 #measured from black lock ring with PTFE seated
 y_tube_short=80 #2 outside shorter paths
 but_ini_loc=$((but_press-3)) #get close to the button ready to press it
-t0dwell="P550"
-t1dwell="P1000"
-t2dwell="P1500"
-t3dwell="P1900"
+t0dwell="P550" #Dwell time to press switch to load T0
+t1dwell="P1000" #Dwell time to press switch to load T1
+t2dwell="P1500" #Dwell time to press switch to load T2
+t3dwell="P1900" #Dwell time to press switch to load T3
 
 fiffties=8
 
@@ -511,46 +511,64 @@ EOF
             echo -e "No testing data was found, please restart the script and answer NO"
          exit 0
       fi
+
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
+
 else
-   if [ -f $ANS_FILE ]
+   if [ -f $ANS_FILE ] #Clean up answer file
    then
       rm $ANS_FILE
    fi
+   
+      # Start answer file and parm save file
+      touch $ANS_FILE
+      touch $PARM_SAVE
+
+##############################################   
+########## START OF TESTING QUESTIONS ##########
+##############################################
+
+
    echo "What firmware are you using?"
    read -p  "[PRUSA,MARLIN,KLIPPER]" firmware
-   USER_ANS=$(echo "${firmware^^}")
-   if [ -z "$USER_ANS" ]
+   USER_ANS1=$(echo "${firmware^^}")
+   if [ -z "$USER_ANS1" ]
       then
          echo "Input cannot be blank."
       exit 0
    fi
 
-   if  [[ "$USER_ANS" != "KLIPPER" && "$USER_ANS" != "MARLIN" && "$USER_ANS" != "PRUSA" ]]
+   if  [[ "$USER_ANS1" != "KLIPPER" && "$USER_ANS1" != "MARLIN" && "$USER_ANS1" != "PRUSA" ]]
       then
          echo "Input has to be KLIPPER PRUSA or MARLIN."
       exit 0
    fi
-   firmware=$USER_ANS
-   touch $ANS_FILE
-   touch $PARM_SAVE
-   echo "Your firmware is :$firmware" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   
    echo "What axis is your Chameleon button on?"
    read -p "[X or Y]" axis
-   USER_ANS=$(echo "${axis^^}")
-   if [ -z "$USER_ANS" ]
+   USER_ANS2=$(echo "${axis^^}")
+   if [ -z "$USER_ANS2" ]
       then
          echo "Input cannot be blank."
       exit 0
    fi
 
-   if  [[ "$USER_ANS" != "X" && "$USER_ANS" != "Y" ]]
+   if  [[ "$USER_ANS2" != "X" && "$USER_ANS2" != "Y" ]]
      then
          echo "Input has to be X or Y."
      exit 0
    fi
 
-   but_axis=$USER_ANS
-   echo "Your button axis is:$but_axis" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   
+   
 
    echo "Where do we have go on the $but_axis axis to click the Chameleon button [in mm]?"
    read -p "[ mm ]" press
@@ -565,8 +583,8 @@ else
          echo "Input has to be a number."
       exit 0
    fi
-   but_press=$press
-   echo "You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   
+   
 
    echo "What is your filament loading gap in mm? [amount above Y pipe when starting, recommend 25mm]"
    read -p "[mm]" gap
@@ -581,8 +599,8 @@ else
          echo "Input has to be a number."
       exit 0
    fi
-   fil_start_gap=$gap
-   echo "Your filament starting gap is :$fil_start_gap" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   
+   
 
    echo "What is the lenght of the tube from the Y pipe to the extruder in mm?"
    read -p "[mm]" etube
@@ -597,17 +615,41 @@ else
          echo "Input has to be a number."
       exit 0
    fi
-   ext_feed_tube=$etube
-   echo "Your PTFE tube above the extruder is  :$ext_feed_tube" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    
-   #Variables to be set for test gcode only
-   long_travel=$((fil_start_gap+ext_feed_tube+y_tube_long))
-   echo "Long travel test" $long_travel >> $PARM_SAVE
-   mili_sec_load="P"$((((long_travel/34)+2)*1000))
-   echo "Mili Sec Load" $mili_sec_load >> $PARM_SAVE
-   but_ini_loc=$((but_press-3)) #get close to the button ready to press it 
+   
+ 
+   #Variables gathered from testing questions
+   firmware=$USER_ANS1 #What firmware you are using
+   but_axis=$USER_ANS2 #What Axis is your button installed on
+   but_press=$press #Where do you have to go to push the button
+   fil_start_gap=$gap #How far above the Y pipe is you filament start posistion
+   ext_feed_tube=$etube #The lenth of the tube to feed extruder measued from black ring on coupler 
 
-   if [ -f $Rate4_Test_G_File ]; then
+   #Send all the setting gathered from questions to answer file for Gcode creation and to answer save file.
+   echo "Your firmware is :$firmware" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Your button axis is:$but_axis" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Your filament starting gap is :$fil_start_gap" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Your PTFE tube above the extruder is  :$ext_feed_tube" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+
+##############################################   
+########## END OF TESTING QUESTIONS ##########
+##############################################
+
+   ########################################   
+   #Variables to be set for test gcode only
+   ########################################
+
+   long_travel=$((fil_start_gap+ext_feed_tube+y_tube_long))
+   mili_sec_load="P"$((((long_travel/34)+2)*1000))
+   but_ini_loc=$((but_press-3)) #get close to the button ready to press it
+
+   #Save the variables to save file
+   echo "Long travel test" $long_travel >> $PARM_SAVE
+   echo "Mili Sec Load" $mili_sec_load >> $PARM_SAVE
+
+
+   if [ -f $Rate4_Test_G_File ]; then #Clean up gcode test file
       rm $Rate4_Test_G_File
    fi
 
