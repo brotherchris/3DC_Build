@@ -31,18 +31,18 @@ but_ini_loc=$((but_press-3)) #get close to the button ready to press it
 echo "Have you ran the load test GCODE yet?"
 read -p "[Y/N]" tested
 USER_ANS=$(echo "${tested^^}") #used to make the prompt always upper case
-if [ -z "$USER_ANS" ]    then
+if [ -z "$USER_ANS" ]; then
    echo "Input cannot be blank."
    exit 0
 fi
 
-if  [[ "$USER_ANS" != "Y" && "$USER_ANS" != "N" ]]    then
+if  [[ "$USER_ANS" != "Y" && "$USER_ANS" != "N" ]]; then
    echo "Input has to be Y or N."
    exit 0
 fi
 
-if [ $USER_ANS == "Y" ] then  #Start building All the gcode files
-   if [ -f $ANS_FILE ] then #Make sure the answer file from the rate testing is there.
+if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
+   if [ -f $ANS_FILE ]; then #Make sure the answer file from the rate testing is there.
       int=0 #reset increment before loop starts
       echo "Contents of test answer file." $ANS_FILE > $PARM_SAVE  #Make header in answer and save file 
       
@@ -82,96 +82,96 @@ if [ $USER_ANS == "Y" ] then  #Start building All the gcode files
       echo "What is your MAX X size in mm?"
       read -p "[ mm ]" MAXX
       
-      if [ -z "$MAXX" ] then
+      if [ -z "$MAXX" ]; then
          echo "Input cannot be blank."
          exit 0
       fi
 		
-      if [[ "$MAXX" != ?(-)+([0-9]) ]] then
+      if [[ "$MAXX" != ?(-)+([0-9]) ]]; then
          echo "Input has to be a number."
          exit 0
       fi
       
       echo "What is your MAX Y size in mm?"
       read -p "[ mm ]" MAXY
-      if [ -z "$MAXY" ] then
+      if [ -z "$MAXY" ]; then
          echo "Input cannot be blank."
           exit 0
       fi
 		    
-      if [[ "$MAXY" != ?(-)+([0-9]) ]] then
+      if [[ "$MAXY" != ?(-)+([0-9]) ]]; then
          echo "Input has to be a number."
          exit 0
       fi
       
       echo "Enter T0 kick out length in mm"
       read -p "[ mm ]" kick0
-      if [ -z "$kick0" ] then
+      if [ -z "$kick0" ]; then
          echo "Input cannot be blank."
          exit 0
       fi
 		    
-      if [[ "$kick0" != ?(-)+([0-9]) ]] then
+      if [[ "$kick0" != ?(-)+([0-9]) ]]; then
          echo "Input has to be a number."
          exit 0
       fi
          
       echo "Enter T1 kick out length in mm"
       read -p "[ mm ]" kick1
-      if [ -z "$kick1" ] then
+      if [ -z "$kick1" ]; then
          echo "Input cannot be blank."
          exit 0
       fi
 	    
-      if [[ "$kick1" != ?(-)+([0-9]) ]] then
+      if [[ "$kick1" != ?(-)+([0-9]) ]]; then
          echo "Input has to be a number."
          exit 0
       fi
             
 	   echo "Enter T2 kick out length in mm"
 		read -p "[ mm ]" kick2
-      if [ -z "$kick2" ] then
+      if [ -z "$kick2" ]; then
          echo "Input cannot be blank."
          exit 0
       fi
 	    
-      if [[ "$kick2" != ?(-)+([0-9]) ]] then
+      if [[ "$kick2" != ?(-)+([0-9]) ]]; then
          echo "Input has to be a number."
          exit 0
       fi
        
       echo "Enter T3 kick out length in mm"
       read -p "[ mm ]" kick3
-      if [ -z "$kick3" ] then
+      if [ -z "$kick3" ]; then
          echo "Input cannot be blank."
          exit 0
       fi
 		    
-      if [[ "$kick3" != ?(-)+([0-9]) ]] then
+      if [[ "$kick3" != ?(-)+([0-9]) ]]; then
          echo "Input has to be a number."
          exit 0
       fi
    
       echo "What is the length in mm from the top of the extruder coupler to the gears?"
       read -p "[ mm ]" togears
-      if [ -z "$togears" ] then
+      if [ -z "$togears" ]; then
          echo "Input cannot be blank."
          exit 0
       fi
 		    
-      if [[ "$togears" != ?(-)+([0-9]) ]] then
+      if [[ "$togears" != ?(-)+([0-9]) ]]; then
          echo "Input has to be a number."
          exit 0
       fi
             
 	   echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
       read -p "[ mm ]" tonozzle
-      if [ -z "$tonozzle" ] then
+      if [ -z "$tonozzle" ]; then
          echo "Input cannot be blank."
          exit 0
       fi
 		    
-      if [[ "$tonozzle" != ?(-)+([0-9]) ]] then
+      if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
          echo "Input has to be a number."
          exit 0
       fi
@@ -185,7 +185,7 @@ if [ $USER_ANS == "Y" ] then  #Start building All the gcode files
          rm $End_G_File
       fi
       touch $End_G_File
-      if [ -f $Tool_G_File ] ; then
+      if [ -f $Tool_G_File ]; then
          rm $Tool_G_File
       fi
       touch $Tool_G_File
@@ -224,7 +224,7 @@ if [ $USER_ANS == "Y" ] then  #Start building All the gcode files
       fil_feed_rate_1=$(echo "scale=1;($long_travel+$init_kickout_1)/$sec_to_load" | bc )
       fil_feed_rate_2=$(echo "scale=1;($long_travel+$init_kickout_2)/$sec_to_load" | bc )
       fil_feed_rate_3=$(echo "scale=1;($short_travel+$init_kickout_3)/$sec_to_load" | bc )
-      if [ ext_dd == true ] then
+      if [ ext_dd == true ]; then
          coupler_comp=13
          load_to_gear_0=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$short_travel" | bc )
          load_to_gear_1=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$long_travel" | bc )
