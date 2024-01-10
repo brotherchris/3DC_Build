@@ -42,7 +42,9 @@ if  [[ "$USER_ANS" != "Y" && "$USER_ANS" != "N" ]]; then
 fi
 
 if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
-   if [ -f $ANS_FILE ]; then #Make sure the answer file from the rate testing is there.
+      minimumsize=120
+      actualsize=$(wc -c <"$ANS_FILE")
+   if [ -f $ANS_FILE && $actualsize -ge $minimumsize ]; then #Make sure the answer file from the rate testing is there      
       int=0 #reset increment before loop starts
       echo "Contents of test answer file." $ANS_FILE > $PARM_SAVE  #Make header in answer and save file 
       
