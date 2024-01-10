@@ -267,7 +267,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
       echo "Pruge line for Y starts :" $purge_line_start_ye >> $PARM_SAVE
 		  
 		#Start building Start Gcode file
-      echo -e ";Copy and paste everything into START gcode window" >>$Start_G_File
+      echo -e ";Copy and paste everything into START gcode window" >> $Start_G_File
       if [[ $firmware == "KLIPPER" ]]; then
          echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $Start_G_File
       fi
@@ -326,7 +326,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
 
       #Start building END gcode file
 
-      echo -e ";Copy and paste everything into END gcode window" >>$End_G_File
+      echo -e ";Copy and paste everything into END gcode window" >> $End_G_File
       if [[ $firmware == "KLIPPER" ]]; then
          echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $End_G_File
       fi
@@ -362,18 +362,13 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
       G0 Y-3 F2000 ; unpress button
       G90
       M83
-      
+      EOF
       
       if [[ $firmware == "KLIPPER" ]]; then
          echo "END_PRINT" >> $End_G_File
       fi
-      
-      EOF
 
       #Start building tool gcode file.
-
-
-
 
       echo -e ";Copy and paste everything into TOOL CHANGE gcode window" >>$Tool_G_File
       cat >> $Tool_G_File << EOF
