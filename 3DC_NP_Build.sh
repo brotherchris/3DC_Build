@@ -21,7 +21,7 @@ ANS_FILE=ANS_FILE.txt #File to store your test run answers in
 PARM_SAVE=ParmSave_$date.txt
 y_tube_long=115 #measured from black lock ring with PTFE seated
 y_tube_short=80 #2 outside shorter paths
-but_ini_loc=$((but_press-3)) #get close to the button ready to press it
+
 
 #############################################
 ######## Gcode creation questions ###########
@@ -206,7 +206,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          init_kickout_3=$kick3 #Kick out from testing of T3
          feed_to_ext=$togears
          gears_to_nozzle=$tonozzle
-
+         but_ini_loc=$((but_press-3)) #get close to the button ready to press it
 
          ############ Save questions answers to parm save file ###################
 
@@ -619,9 +619,10 @@ else
    firmware=$USER_ANS1 #What firmware you are using
    but_axis=$USER_ANS2 #What Axis is your button installed on
    but_press=$press #Where do you have to go to push the button
+   but_ini_loc=$((but_press-3)) #get close to the button ready to press it
    fil_start_gap=$gap #How far above the Y pipe is you filament start posistion
    ext_feed_tube=$etube #The lenth of the tube to feed extruder measued from black ring on coupler 
-
+   
    #Send all the setting gathered from questions to answer file for Gcode creation and to answer save file.
    echo "Your firmware is :$firmware" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your button axis is:$but_axis" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
@@ -639,7 +640,6 @@ else
 
    long_travel=$((fil_start_gap+ext_feed_tube+y_tube_long))
    mili_sec_load="P"$((((long_travel/34)+2)*1000))
-   but_ini_loc=$((but_press-3)) #get close to the button ready to press it
 
    #Save the variables to save file
    echo "Long travel test" $long_travel >> $PARM_SAVE
