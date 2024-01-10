@@ -520,6 +520,7 @@ TGF4
          exit 0
       else
          echo -e "Testing data isn't complete, please restart the script and answer NO"
+      fi
    else
       echo -e "No testing data was found, please restart the script and answer NO"
       exit 0
