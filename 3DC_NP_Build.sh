@@ -43,7 +43,7 @@ fi
 
 if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
       
-   if [ -f $ANS_FILE $actualsize -ge $minimumsize ]; then #Make sure the answer file from the rate testing is there      
+   if [ -f $ANS_FILE ]; then #Make sure the answer file from the rate testing is there      
       minimumsize=120
       actualsize=$(wc -c <"$ANS_FILE")
          if [ $actualsize -ge $minimumsize ]; then
