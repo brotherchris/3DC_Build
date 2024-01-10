@@ -13,12 +13,12 @@ fiffties=8
 
 date=$(date +%Y-%m-%d_%H:%M:%S)
 CLI_No_TEMP=$1  #Pull in CLI parm to take out temp changes
-Start_G_File=~/Start_Gcode.txt #Text file for your Start gcode
-End_G_File=~/End_Gcode.txt #Text file for your End gcode
-Tool_G_File=~/Tool_Gcode.txt #Text file for your Tool change gcode
-Rate4_Test_G_File=~/Rate4Test_Gcode.txt #Text file for your rate test gcode
-ANS_FILE=~/ANS_FILE.txt #File to store your test run answers in
-PARM_SAVE=~/ParmSave_$date.txt
+Start_G_File=Start_Gcode.txt #Text file for your Start gcode
+End_G_File=End_Gcode.txt #Text file for your End gcode
+Tool_G_File=Tool_Gcode.txt #Text file for your Tool change gcode
+Rate4_Test_G_File=Rate4Test_Gcode.txt #Text file for your rate test gcode
+ANS_FILE=ANS_FILE.txt #File to store your test run answers in
+PARM_SAVE=ParmSave_$date.txt
 y_tube_long=115 #measured from black lock ring with PTFE seated
 y_tube_short=80 #2 outside shorter paths
 but_ini_loc=$((but_press-3)) #get close to the button ready to press it
@@ -550,9 +550,9 @@ else
       touch $ANS_FILE
       touch $PARM_SAVE
 
-##############################################   
-########## START OF TESTING QUESTIONS ##########
-##############################################
+   ##############################################   
+   ########## START OF TESTING QUESTIONS ##########
+   ##############################################
 
 
    echo "What firmware are you using?"
@@ -636,9 +636,9 @@ else
    echo "Your filament starting gap is :$fil_start_gap" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your PTFE tube above the extruder is  :$ext_feed_tube" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
 
-##############################################   
-########## END OF TESTING QUESTIONS ##########
-##############################################
+   ##############################################   
+   ########## END OF TESTING QUESTIONS ##########
+   ##############################################
 
    ########################################   
    #Variables to be set for test gcode only
