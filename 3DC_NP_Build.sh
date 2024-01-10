@@ -255,16 +255,16 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
       echo "Filament feed rate 1 :" $fil_feed_rate_1 >> $PARM_SAVE
       echo "Filament feed rate 2 :" $fil_feed_rate_2 >> $PARM_SAVE
       echo "Filament feed rate 3 :" $fil_feed_rate_3 >> $PARM_SAVE
-      echo "T0 extra filament length if needed :" $feed_to_ext_0 >> $PARM_SAVE
-      echo "T1 extra filament length if needed :" $feed_to_ext_1 >> $PARM_SAVE
-      echo "T2 extra filament length if needed :" $feed_to_ext_2 >> $PARM_SAVE
-      echo "T3 extra filament length if needed :" $feed_to_ext_3 >> $PARM_SAVE
+      echo "T0 extra filament length if needed :" $load_to_gear_0 >> $PARM_SAVE
+      echo "T1 extra filament length if needed :" $load_to_gear_1 >> $PARM_SAVE
+      echo "T2 extra filament length if needed :" $load_to_gear_2 >> $PARM_SAVE
+      echo "T3 extra filament length if needed :" $load_to_gear_3 >> $PARM_SAVE
       echo "T0 Total load length /feed rate *1000 /1 :" $load_sec_0 >> $PARM_SAVE
       echo "T1 Total load length /feed rate *1000 /1 :" $load_sec_1 >> $PARM_SAVE
       echo "T2 Total load length /feed rate *1000 /1 :" $load_sec_2 >> $PARM_SAVE
       echo "T3 Total load length /feed rate *1000 /1 :" $load_sec_3 >> $PARM_SAVE
       echo "Purge line for X starts :" $purge_line_start_x >> $PARM_SAVE
-      echo "Pruge line for Y starts :" $purge_line_start_ye >> $PARM_SAVE
+      echo "Pruge line for Y starts :" $purge_line_start_y >> $PARM_SAVE
 		  
 		#Start building Start Gcode file
       echo -e ";Copy and paste everything into START gcode window" >> $Start_G_File
@@ -306,20 +306,13 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
 	   G0 $but_axis$but_ini_loc F2000 ; move away from button
 	   M400 ; make sure moves are all done before we load
 	   G0 E$gears_to_nozzle F500 ; Load to nozzle
-	   EOF
-      
-      for i in `seq $fiffties`
-      do
-        echo "HelloWorld" >> $Start_G_File
-      done
-
-      cat >> $Start_G_File << EOF
-      G0 X$purge_line_start_x Y$purge_line_start_y Z.2 F1000; move to extruders assigned purge line
+	   G0 X$purge_line_start_x Y$purge_line_start_y Z.2 F1000; move to extruders assigned purge line
       G0 Y0 E60; purge the extruder while moving to Y min.
       G0 X$((purge_line_start_x-1)); purge the extruder.
       G0 Y$but_ini_loc E105; purge the extruder.
       G4 P2000 ; all done
       EOF
+      
       if [[ $firmware == "KLIPPER" ]]; then
          echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Start_G_File
       fi
@@ -370,7 +363,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
 
       #Start building tool gcode file.
 
-      echo -e ";Copy and paste everything into TOOL CHANGE gcode window" >>$Tool_G_File
+      echo -e ";Copy and paste everything into TOOL CHANGE gcode window" >> $Tool_G_File
       cat >> $Tool_G_File << EOF
       {if previous_extruder>-1}
       {if next_extruder!=previous_extruder}
@@ -394,6 +387,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
       G0 E1 F1500 ;
       G0 E-25 F500 ;
       EOF
+
       if [[ $CLI_No_TEMP != "NO_TEMP" ]]; then
          cat >> $Tool_G_File << EOF
          M106 S255
@@ -589,8 +583,6 @@ else
       exit 0
    fi
    
-   
-
    echo "What is your filament loading gap in mm? [amount above Y pipe when starting, recommend 25mm]"
    read -p "[mm]" gap
    if [ -z "$gap" ]; then
@@ -744,4 +736,4 @@ else
 
 
    exit 0
-fi
+   fi
