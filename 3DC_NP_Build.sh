@@ -42,240 +42,242 @@ if  [[ "$USER_ANS" != "Y" && "$USER_ANS" != "N" ]]; then
 fi
 
 if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
+      
+   if [ -f $ANS_FILE $actualsize -ge $minimumsize ]; then #Make sure the answer file from the rate testing is there      
       minimumsize=120
       actualsize=$(wc -c <"$ANS_FILE")
-   if [ -f $ANS_FILE && $actualsize -ge $minimumsize ]; then #Make sure the answer file from the rate testing is there      
-      int=0 #reset increment before loop starts
-      echo "Contents of test answer file." $ANS_FILE > $PARM_SAVE  #Make header in answer and save file 
-      
-      while IFS=":" read -r value1 value2 remainder #Start a loop to pull values from test answer file to use as variables 
-         do
-            Line=$value2
-            if [ $int == 0 ]; then
-               firmware=$value2
-            fi
-            Line=$value2
-            if [ $int == 1 ]; then
-               but_axis=$value2
-            fi
-            Line=$value2
-            if [ $int == 2 ]; then
-               but_press=$value2
-            fi
-            Line=$value2
-            if [ $int == 3 ]; then
-               fil_start_gap=$value2
-            fi
-            Line=$value2
-            if [ $int == 4 ]; then
-               ext_feed_tube=$value2
-            fi
-            ((int++)) #increase int counter
-      done < $ANS_FILE #Loop over
+         if [ $actualsize -ge $minimumsize ]; then
+         int=0 #reset increment before loop starts
+         echo "Contents of test answer file." $ANS_FILE > $PARM_SAVE  #Make header in answer and save file 
 
-      echo "Good, here are the settings you already entered"
-      echo ""
-      cat $ANS_FILE
-      echo ""
-      echo ""
-      echo "We need more info about your printer."
-      read -p "Press [Enter] to get started..."
-      clear
-      echo "What is your MAX X size in mm?"
-      read -p "[ mm ]" MAXX
-      
-      if [ -z "$MAXX" ]; then
-         echo "Input cannot be blank."
-         exit 0
-      fi
-		
-      if [[ "$MAXX" != ?(-)+([0-9]) ]]; then
-         echo "Input has to be a number."
-         exit 0
-      fi
-      
-      echo "What is your MAX Y size in mm?"
-      read -p "[ mm ]" MAXY
-      if [ -z "$MAXY" ]; then
-         echo "Input cannot be blank."
-          exit 0
-      fi
-		    
-      if [[ "$MAXY" != ?(-)+([0-9]) ]]; then
-         echo "Input has to be a number."
-         exit 0
-      fi
-      
-      echo "Enter T0 kick out length in mm"
-      read -p "[ mm ]" kick0
-      if [ -z "$kick0" ]; then
-         echo "Input cannot be blank."
-         exit 0
-      fi
-		    
-      if [[ "$kick0" != ?(-)+([0-9]) ]]; then
-         echo "Input has to be a number."
-         exit 0
-      fi
-         
-      echo "Enter T1 kick out length in mm"
-      read -p "[ mm ]" kick1
-      if [ -z "$kick1" ]; then
-         echo "Input cannot be blank."
-         exit 0
-      fi
-	    
-      if [[ "$kick1" != ?(-)+([0-9]) ]]; then
-         echo "Input has to be a number."
-         exit 0
-      fi
-            
-	   echo "Enter T2 kick out length in mm"
-		read -p "[ mm ]" kick2
-      if [ -z "$kick2" ]; then
-         echo "Input cannot be blank."
-         exit 0
-      fi
-	    
-      if [[ "$kick2" != ?(-)+([0-9]) ]]; then
-         echo "Input has to be a number."
-         exit 0
-      fi
-       
-      echo "Enter T3 kick out length in mm"
-      read -p "[ mm ]" kick3
-      if [ -z "$kick3" ]; then
-         echo "Input cannot be blank."
-         exit 0
-      fi
-		    
-      if [[ "$kick3" != ?(-)+([0-9]) ]]; then
-         echo "Input has to be a number."
-         exit 0
-      fi
+         while IFS=":" read -r value1 value2 remainder #Start a loop to pull values from test answer file to use as variables 
+            do
+               Line=$value2
+               if [ $int == 0 ]; then
+                  firmware=$value2
+               fi
+               Line=$value2
+               if [ $int == 1 ]; then
+                  but_axis=$value2
+               fi
+               Line=$value2
+               if [ $int == 2 ]; then
+                  but_press=$value2
+               fi
+               Line=$value2
+               if [ $int == 3 ]; then
+                  fil_start_gap=$value2
+               fi
+               Line=$value2
+               if [ $int == 4 ]; then
+                  ext_feed_tube=$value2
+               fi
+               ((int++)) #increase int counter
+         done < $ANS_FILE #Loop over
+
+         echo "Good, here are the settings you already entered"
+         echo ""
+         cat $ANS_FILE
+         echo ""
+         echo ""
+         echo "We need more info about your printer."
+         read -p "Press [Enter] to get started..."
+         clear
+         echo "What is your MAX X size in mm?"
+         read -p "[ mm ]" MAXX
+
+         if [ -z "$MAXX" ]; then
+            echo "Input cannot be blank."
+            exit 0
+         fi
    
-      echo "What is the length in mm from the top of the extruder coupler to the gears?"
-      read -p "[ mm ]" togears
-      if [ -z "$togears" ]; then
-         echo "Input cannot be blank."
-         exit 0
-      fi
-		    
-      if [[ "$togears" != ?(-)+([0-9]) ]]; then
-         echo "Input has to be a number."
-         exit 0
-      fi
-            
-	   echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
-      read -p "[ mm ]" tonozzle
-      if [ -z "$tonozzle" ]; then
-         echo "Input cannot be blank."
-         exit 0
-      fi
-		    
-      if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
-         echo "Input has to be a number."
-         exit 0
-      fi
-            
-	   #Remove all old Gcode TXT files
-      if [ -f $Start_G_File ]; then
-         rm $Start_G_File
-      fi
-      touch $Start_G_File
-      if [ -f $End_G_File ]; then
-         rm $End_G_File
-      fi
-      touch $End_G_File
-      if [ -f $Tool_G_File ]; then
-         rm $Tool_G_File
-      fi
-      touch $Tool_G_File
-		   
-      ###################################################################
-      ########## Variables collected from gcode gen questions ###########
-      ###################################################################
-         
-      printer_x_size=$MAXX #max size on X axis
-      printer_y_size=$MAXY #max size of Y axis
-      init_kickout_0=$kick0 #Kick out from testing of T0
-      init_kickout_1=$kick1 #Kick out from testing of T1
-      init_kickout_2=$kick2 #Kick out from testing of T2
-      init_kickout_3=$kick3 #Kick out from testing of T3
-      feed_to_ext=$togears
-      gears_to_nozzle=$tonozzle
+         if [[ "$MAXX" != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+
+         echo "What is your MAX Y size in mm?"
+         read -p "[ mm ]" MAXY
+         if [ -z "$MAXY" ]; then
+            echo "Input cannot be blank."
+             exit 0
+         fi
+   
+         if [[ "$MAXY" != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+
+         echo "Enter T0 kick out length in mm"
+         read -p "[ mm ]" kick0
+         if [ -z "$kick0" ]; then
+            echo "Input cannot be blank."
+            exit 0
+         fi
+   
+         if [[ "$kick0" != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+
+         echo "Enter T1 kick out length in mm"
+         read -p "[ mm ]" kick1
+         if [ -z "$kick1" ]; then
+            echo "Input cannot be blank."
+            exit 0
+         fi
+   
+         if [[ "$kick1" != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+
+	      echo "Enter T2 kick out length in mm"
+		   read -p "[ mm ]" kick2
+         if [ -z "$kick2" ]; then
+            echo "Input cannot be blank."
+            exit 0
+         fi
+   
+         if [[ "$kick2" != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+
+         echo "Enter T3 kick out length in mm"
+         read -p "[ mm ]" kick3
+         if [ -z "$kick3" ]; then
+            echo "Input cannot be blank."
+            exit 0
+         fi
+   
+         if [[ "$kick3" != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+
+         echo "What is the length in mm from the top of the extruder coupler to the gears?"
+         read -p "[ mm ]" togears
+         if [ -z "$togears" ]; then
+            echo "Input cannot be blank."
+            exit 0
+         fi
+   
+         if [[ "$togears" != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+
+	      echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
+         read -p "[ mm ]" tonozzle
+         if [ -z "$tonozzle" ]; then
+            echo "Input cannot be blank."
+            exit 0
+         fi
+   
+         if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+
+	      #Remove all old Gcode TXT files
+         if [ -f $Start_G_File ]; then
+            rm $Start_G_File
+         fi
+         touch $Start_G_File
+         if [ -f $End_G_File ]; then
+            rm $End_G_File
+         fi
+         touch $End_G_File
+         if [ -f $Tool_G_File ]; then
+            rm $Tool_G_File
+         fi
+         touch $Tool_G_File
+   
+         ###################################################################
+         ########## Variables collected from gcode gen questions ###########
+         ###################################################################
+
+         printer_x_size=$MAXX #max size on X axis
+         printer_y_size=$MAXY #max size of Y axis
+         init_kickout_0=$kick0 #Kick out from testing of T0
+         init_kickout_1=$kick1 #Kick out from testing of T1
+         init_kickout_2=$kick2 #Kick out from testing of T2
+         init_kickout_3=$kick3 #Kick out from testing of T3
+         feed_to_ext=$togears
+         gears_to_nozzle=$tonozzle
 
 
-      ############ Save questions answers to parm save file ###################
+         ############ Save questions answers to parm save file ###################
 
-      echo "Max printer size X is :" $MAXX >> $PARM_SAVE
-      echo "Max printer size Y is :" $MAXY >> $PARM_SAVE
-      echo "Kick out T0 is :" $kick0 >> $PARM_SAVE
-      echo "Kick out T1 is :" $kick1 >> $PARM_SAVE
-      echo "Kick out T2 is :" $kick2 >> $PARM_SAVE
-      echo "Kick out T3 is :" $kick3 >> $PARM_SAVE
-      echo "Top of extruder coupler to gears :" $togears >> $PARM_SAVE
-      echo "How many mm from gear to hotend to start extruding :" $tonozzle >> $PARM_SAVE
+         echo "Max printer size X is :" $MAXX >> $PARM_SAVE
+         echo "Max printer size Y is :" $MAXY >> $PARM_SAVE
+         echo "Kick out T0 is :" $kick0 >> $PARM_SAVE
+         echo "Kick out T1 is :" $kick1 >> $PARM_SAVE
+         echo "Kick out T2 is :" $kick2 >> $PARM_SAVE
+         echo "Kick out T3 is :" $kick3 >> $PARM_SAVE
+         echo "Top of extruder coupler to gears :" $togears >> $PARM_SAVE
+         echo "How many mm from gear to hotend to start extruding :" $tonozzle >> $PARM_SAVE
 
-      ############### Variables for gcode creation to do all the MATH, depend on all answers provided ###########################
+         ############### Variables for gcode creation to do all the MATH, depend on all answers provided ###########################
 
-      short_travel=$((fil_start_gap+ext_feed_tube+y_tube_short)) #Top load gap, extruder feed tube and Y pipe, this is the total path
-      long_travel=$((fil_start_gap+ext_feed_tube+y_tube_long))
-      sec_to_load=$(((long_travel/34)+2))
-      fil_feed_rate_0=$(echo "scale=1;($short_travel+$init_kickout_0)/$sec_to_load" | bc ) 
-      fil_feed_rate_1=$(echo "scale=1;($long_travel+$init_kickout_1)/$sec_to_load" | bc )
-      fil_feed_rate_2=$(echo "scale=1;($long_travel+$init_kickout_2)/$sec_to_load" | bc )
-      fil_feed_rate_3=$(echo "scale=1;($short_travel+$init_kickout_3)/$sec_to_load" | bc )
-      if [ ext_dd == true ]; then
-         coupler_comp=13
-         load_to_gear_0=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$short_travel" | bc )
-         load_to_gear_1=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$long_travel" | bc )
-         load_to_gear_2=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$long_travel" | bc )
-         load_to_gear_3=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$short_travel" | bc )
-      else
-         load_to_gear_0=$(echo "scale=1;$feed_to_ext+$short_travel" | bc )
-         load_to_gear_1=$(echo "scale=1;$feed_to_ext+$long_travel" | bc )
-         load_to_gear_2=$(echo "scale=1;$feed_to_ext+$long_travel" | bc )
-         load_to_gear_3=$(echo "scale=1;$feed_to_ext+$short_travel" | bc )
-      fi
+         short_travel=$((fil_start_gap+ext_feed_tube+y_tube_short)) #Top load gap, extruder feed tube and Y pipe, this is the total path
+         long_travel=$((fil_start_gap+ext_feed_tube+y_tube_long))
+         sec_to_load=$(((long_travel/34)+2))
+         fil_feed_rate_0=$(echo "scale=1;($short_travel+$init_kickout_0)/$sec_to_load" | bc ) 
+         fil_feed_rate_1=$(echo "scale=1;($long_travel+$init_kickout_1)/$sec_to_load" | bc )
+         fil_feed_rate_2=$(echo "scale=1;($long_travel+$init_kickout_2)/$sec_to_load" | bc )
+         fil_feed_rate_3=$(echo "scale=1;($short_travel+$init_kickout_3)/$sec_to_load" | bc )
+         if [ ext_dd == true ]; then
+            coupler_comp=13
+            load_to_gear_0=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$short_travel" | bc )
+            load_to_gear_1=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$long_travel" | bc )
+            load_to_gear_2=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$long_travel" | bc )
+            load_to_gear_3=$(echo "scale=1;($feed_to_ext-$coupler_comp)+$short_travel" | bc )
+         else
+            load_to_gear_0=$(echo "scale=1;$feed_to_ext+$short_travel" | bc )
+            load_to_gear_1=$(echo "scale=1;$feed_to_ext+$long_travel" | bc )
+            load_to_gear_2=$(echo "scale=1;$feed_to_ext+$long_travel" | bc )
+            load_to_gear_3=$(echo "scale=1;$feed_to_ext+$short_travel" | bc )
+         fi
 
-      load_sec_0="P"$(echo "scale=2;(($load_to_gear_0/$fil_feed_rate_0)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-      load_sec_1="P"$(echo "scale=2;(($load_to_gear_1/$fil_feed_rate_1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-      load_sec_2="P"$(echo "scale=2;(($load_to_gear_2/$fil_feed_rate_2)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-      load_sec_3="P"$(echo "scale=2;(($load_to_gear_3/$fil_feed_rate_3)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-      purge_line_start_x=$printer_x_size
-      purge_line_start_y=$but_ini_loc
-      purge_line_end_x=
-      purge_line_end_y=
+         load_sec_0="P"$(echo "scale=2;(($load_to_gear_0/$fil_feed_rate_0)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_1="P"$(echo "scale=2;(($load_to_gear_1/$fil_feed_rate_1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_2="P"$(echo "scale=2;(($load_to_gear_2/$fil_feed_rate_2)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_3="P"$(echo "scale=2;(($load_to_gear_3/$fil_feed_rate_3)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         purge_line_start_x=$printer_x_size
+         purge_line_start_y=$but_ini_loc
+         purge_line_end_x=
+         purge_line_end_y=
 
-      ############ Save Math variables to parm save file ###################
+         ############ Save Math variables to parm save file ###################
 
-      echo "Your short travel path is :" $short_travel >> $PARM_SAVE
-      echo "Your long travel path is :" $long_travel >> $PARM_SAVE
-      echo "Seconds to load based on long path /34+2 :" $sec_to_load >> $PARM_SAVE
-      echo "Filament feed rate 0 :" $fil_feed_rate_0 >> $PARM_SAVE
-      echo "Filament feed rate 1 :" $fil_feed_rate_1 >> $PARM_SAVE
-      echo "Filament feed rate 2 :" $fil_feed_rate_2 >> $PARM_SAVE
-      echo "Filament feed rate 3 :" $fil_feed_rate_3 >> $PARM_SAVE
-      echo "T0 extra filament length if needed :" $load_to_gear_0 >> $PARM_SAVE
-      echo "T1 extra filament length if needed :" $load_to_gear_1 >> $PARM_SAVE
-      echo "T2 extra filament length if needed :" $load_to_gear_2 >> $PARM_SAVE
-      echo "T3 extra filament length if needed :" $load_to_gear_3 >> $PARM_SAVE
-      echo "T0 Total load length /feed rate *1000 /1 :" $load_sec_0 >> $PARM_SAVE
-      echo "T1 Total load length /feed rate *1000 /1 :" $load_sec_1 >> $PARM_SAVE
-      echo "T2 Total load length /feed rate *1000 /1 :" $load_sec_2 >> $PARM_SAVE
-      echo "T3 Total load length /feed rate *1000 /1 :" $load_sec_3 >> $PARM_SAVE
-      echo "Purge line for X starts :" $purge_line_start_x >> $PARM_SAVE
-      echo "Pruge line for Y starts :" $purge_line_start_y >> $PARM_SAVE
-		  
-		#Start building Start Gcode file
-      echo -e ";Copy and paste everything into START gcode window" >> $Start_G_File
-      if [[ $firmware == "KLIPPER" ]]; then
-         echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $Start_G_File
-      fi
-      if [[ $firmware == "KLIPPER" ]]; then
-         echo "START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature]" >> $Start_G_File
-      fi
+         echo "Your short travel path is :" $short_travel >> $PARM_SAVE
+         echo "Your long travel path is :" $long_travel >> $PARM_SAVE
+         echo "Seconds to load based on long path /34+2 :" $sec_to_load >> $PARM_SAVE
+         echo "Filament feed rate 0 :" $fil_feed_rate_0 >> $PARM_SAVE
+         echo "Filament feed rate 1 :" $fil_feed_rate_1 >> $PARM_SAVE
+         echo "Filament feed rate 2 :" $fil_feed_rate_2 >> $PARM_SAVE
+         echo "Filament feed rate 3 :" $fil_feed_rate_3 >> $PARM_SAVE
+         echo "T0 extra filament length if needed :" $load_to_gear_0 >> $PARM_SAVE
+         echo "T1 extra filament length if needed :" $load_to_gear_1 >> $PARM_SAVE
+         echo "T2 extra filament length if needed :" $load_to_gear_2 >> $PARM_SAVE
+         echo "T3 extra filament length if needed :" $load_to_gear_3 >> $PARM_SAVE
+         echo "T0 Total load length /feed rate *1000 /1 :" $load_sec_0 >> $PARM_SAVE
+         echo "T1 Total load length /feed rate *1000 /1 :" $load_sec_1 >> $PARM_SAVE
+         echo "T2 Total load length /feed rate *1000 /1 :" $load_sec_2 >> $PARM_SAVE
+         echo "T3 Total load length /feed rate *1000 /1 :" $load_sec_3 >> $PARM_SAVE
+         echo "Purge line for X starts :" $purge_line_start_x >> $PARM_SAVE
+         echo "Pruge line for Y starts :" $purge_line_start_y >> $PARM_SAVE
+   
+		   #Start building Start Gcode file
+         echo -e ";Copy and paste everything into START gcode window" >> $Start_G_File
+         if [[ $firmware == "KLIPPER" ]]; then
+            echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $Start_G_File
+         fi
+         if [[ $firmware == "KLIPPER" ]]; then
+            echo "START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature]" >> $Start_G_File
+         fi
 
 cat >> $Start_G_File << SGF1
 G90 ;absolute mode
@@ -315,16 +317,16 @@ G0 Y$but_ini_loc E105; purge the extruder.
 G4 P2000 ; all done
 SGF1
       
-      if [[ $firmware == "KLIPPER" ]]; then
-         echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Start_G_File
-      fi
+         if [[ $firmware == "KLIPPER" ]]; then
+            echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Start_G_File
+         fi
 
-      #Start building END gcode file
+         #Start building END gcode file
 
-      echo -e ";Copy and paste everything into END gcode window" >> $End_G_File
-      if [[ $firmware == "KLIPPER" ]]; then
-         echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $End_G_File
-      fi
+         echo -e ";Copy and paste everything into END gcode window" >> $End_G_File
+         if [[ $firmware == "KLIPPER" ]]; then
+            echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $End_G_File
+         fi
 cat >> $End_G_File << EGF1
 G90 ;absolute mode
 G92 E0
@@ -359,13 +361,13 @@ G90
 M83
 EGF1
       
-      if [[ $firmware == "KLIPPER" ]]; then
-         echo "END_PRINT" >> $End_G_File
-      fi
+         if [[ $firmware == "KLIPPER" ]]; then
+            echo "END_PRINT" >> $End_G_File
+         fi
 
-      #Start building tool gcode file.
+         #Start building tool gcode file.
 
-      echo -e ";Copy and paste everything into TOOL CHANGE gcode window" >> $Tool_G_File
+         echo -e ";Copy and paste everything into TOOL CHANGE gcode window" >> $Tool_G_File
 cat >> $Tool_G_File << TGF1
 {if previous_extruder>-1}
 {if next_extruder!=previous_extruder}
@@ -390,7 +392,7 @@ G0 E1 F1500 ;
 G0 E-25 F500 ;
 TGF1
 
-      if [[ $CLI_No_TEMP != "NO_TEMP" ]]; then
+         if [[ $CLI_No_TEMP != "NO_TEMP" ]]; then
 cat >> $Tool_G_File << TGF2
 M106 S255
 M109 S180; cool down to prevent swelling
@@ -405,9 +407,9 @@ G92 E0
 M107 ;
 M104 S[temperature];
 TGF2
-      else
-          echo ";NO TEMP SET" >> $Tool_G_File
-      fi
+         else
+             echo ";NO TEMP SET" >> $Tool_G_File
+         fi
 
 cat >> $Tool_G_File << TGF3
 G0 Y3 F2000
@@ -476,9 +478,9 @@ G92 E0
 M104 S[temperature];
 M106 S[max_fan_speed];
 TGF3
-      if [[ $firmware == "KLIPPER" ]]; then
-         echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Tool_G_File
-      fi
+         if [[ $firmware == "KLIPPER" ]]; then
+            echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Tool_G_File
+         fi
 cat >> $Tool_G_File << TGF4
 G90 ; move to absolute mode
 M83
@@ -486,37 +488,38 @@ M83
 {endif}
 TGF4
 
-      clear
-      echo ""
-      echo -e "That's it!"
-      echo -e "Here are the things you need to enter in PRUSA Slicer"
-      read -p "Press [Enter] key to get gcodes..."
-      clear
-      cat $Start_G_File
-      echo ""
-      read -p "Press [Enter] to continue..."
-      clear
-      cat $End_G_File
-      echo ""
-      read -p "Press [Enter] to continue..."
-      clear
-      cat $Tool_G_File
-      echo ""
-      read -p "Press [Enter] to continue..."
-      echo ""
-      echo ""
-      echo ""
-      echo -e "To read these files again, use the cat commands to display them as follows"
-      echo ""
-      echo -e "cat Start_Gcode.txt"
-      echo ""
-      echo -e "cat End_Gcode.txt"
-      echo ""
-      echo -e "cat Tool_Gcode.txt"
-      echo ""
-      echo -e "Good luck!"
-      exit 0
-
+         clear
+         echo ""
+         echo -e "That's it!"
+         echo -e "Here are the things you need to enter in PRUSA Slicer"
+         read -p "Press [Enter] key to get gcodes..."
+         clear
+         cat $Start_G_File
+         echo ""
+         read -p "Press [Enter] to continue..."
+         clear
+         cat $End_G_File
+         echo ""
+         read -p "Press [Enter] to continue..."
+         clear
+         cat $Tool_G_File
+         echo ""
+         read -p "Press [Enter] to continue..."
+         echo ""
+         echo ""
+         echo ""
+         echo -e "To read these files again, use the cat commands to display them as follows"
+         echo ""
+         echo -e "cat Start_Gcode.txt"
+         echo ""
+         echo -e "cat End_Gcode.txt"
+         echo ""
+         echo -e "cat Tool_Gcode.txt"
+         echo ""
+         echo -e "Good luck!"
+         exit 0
+      else
+         echo -e "Testing data isn't complete, please restart the script and answer NO"
    else
       echo -e "No testing data was found, please restart the script and answer NO"
       exit 0
