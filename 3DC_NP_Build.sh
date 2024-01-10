@@ -371,11 +371,11 @@ EGF1
 cat >> $Tool_G_File << TGF1
 {if previous_extruder>-1}
 {if next_extruder!=previous_extruder}
-EOF
+TGF1
 if [[ $firmware == "KLIPPER" ]]; then
    echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $Tool_G_File
 fi
-cat >> $Tool_G_File << EOF
+cat >> $Tool_G_File << TGF2
 G0 E-2 F2400; retract to prevent blobbing
 G92 E0
 G90 ;absolute mode
@@ -390,10 +390,10 @@ G0 E5 F1500 ;
 G0 E-1 F500 ;
 G0 E1 F1500 ;
 G0 E-25 F500 ;
-TGF1
+TGF2
 
          if [[ $CLI_No_TEMP != "NO_TEMP" ]]; then
-cat >> $Tool_G_File << TGF2
+cat >> $Tool_G_File << TGF3
 M106 S255
 M109 S180; cool down to prevent swelling
 G0 E24 F1500 ; last tip dip with cold tip
@@ -406,12 +406,12 @@ G0 E-50 F500 ; back out of the extruder
 G92 E0
 M107 ;
 M104 S[temperature];
-TGF2
+TGF3
          else
              echo ";NO TEMP SET" >> $Tool_G_File
          fi
 
-cat >> $Tool_G_File << TGF3
+cat >> $Tool_G_File << TGF4
 G0 Y3 F2000
 {if next_extruder==0}
 G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
@@ -477,16 +477,16 @@ G4 P400
 G92 E0
 M104 S[temperature];
 M106 S[max_fan_speed];
-TGF3
+TGF4
          if [[ $firmware == "KLIPPER" ]]; then
             echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Tool_G_File
          fi
-cat >> $Tool_G_File << TGF4
+cat >> $Tool_G_File << TGF5
 G90 ; move to absolute mode
 M83
 {endif}
 {endif}
-TGF4
+TGF5
 
          clear
          echo ""
