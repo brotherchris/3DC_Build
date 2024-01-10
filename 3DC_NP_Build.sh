@@ -49,23 +49,23 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
       while IFS=":" read -r value1 value2 remainder #Start a loop to pull values from test answer file to use as variables 
          do
             Line=$value2
-            if [ $int == 0 ] then
+            if [ $int == 0 ]; then
                firmware=$value2
             fi
             Line=$value2
-            if [ $int == 1 ] then
+            if [ $int == 1 ]; then
                but_axis=$value2
             fi
             Line=$value2
-            if [ $int == 2 ] then
+            if [ $int == 2 ]; then
                but_press=$value2
             fi
             Line=$value2
-            if [ $int == 3 ] then
+            if [ $int == 3 ]; then
                fil_start_gap=$value2
             fi
             Line=$value2
-            if [ $int == 4 ] then
+            if [ $int == 4 ]; then
                ext_feed_tube=$value2
             fi
             ((int++)) #increase int counter
@@ -542,8 +542,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
 ################### TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING TESTING################################
 
 else
-   if [ -f $ANS_FILE ] #Clean up answer file
-   then
+   if [ -f $ANS_FILE ]; then #Clean up answer file
       rm $ANS_FILE
    fi
    
@@ -559,47 +558,39 @@ else
    echo "What firmware are you using?"
    read -p  "[PRUSA,MARLIN,KLIPPER]" firmware
    USER_ANS1=$(echo "${firmware^^}")
-   if [ -z "$USER_ANS1" ]
-      then
-         echo "Input cannot be blank."
+   if [ -z "$USER_ANS1" ]; then
+      echo "Input cannot be blank."
       exit 0
    fi
 
-   if  [[ "$USER_ANS1" != "KLIPPER" && "$USER_ANS1" != "MARLIN" && "$USER_ANS1" != "PRUSA" ]]
-      then
-         echo "Input has to be KLIPPER PRUSA or MARLIN."
+   if  [[ "$USER_ANS1" != "KLIPPER" && "$USER_ANS1" != "MARLIN" && "$USER_ANS1" != "PRUSA" ]]; then
+      echo "Input has to be KLIPPER PRUSA or MARLIN."
       exit 0
    fi
    
    echo "What axis is your Chameleon button on?"
    read -p "[X or Y]" axis
    USER_ANS2=$(echo "${axis^^}")
-   if [ -z "$USER_ANS2" ]
-      then
-         echo "Input cannot be blank."
+   if [ -z "$USER_ANS2" ]; then
+      echo "Input cannot be blank."
       exit 0
    fi
 
-   if  [[ "$USER_ANS2" != "X" && "$USER_ANS2" != "Y" ]]
-     then
-         echo "Input has to be X or Y."
-     exit 0
+   if  [[ "$USER_ANS2" != "X" && "$USER_ANS2" != "Y" ]]; then
+      echo "Input has to be X or Y."
+      exit 0
    fi
 
-   
-   
 
    echo "Where do we have go on the $but_axis axis to click the Chameleon button [in mm]?"
    read -p "[ mm ]" press
-   if [ -z "$press" ]
-      then
-         echo "Input cannot be blank."
+   if [ -z "$press" ]; then
+      echo "Input cannot be blank."
       exit 0
    fi
 
-   if [[ "$press" != ?(-)+([0-9]) ]]
-      then
-         echo "Input has to be a number."
+   if [[ "$press" != ?(-)+([0-9]) ]]; then
+      echo "Input has to be a number."
       exit 0
    fi
    
@@ -607,31 +598,25 @@ else
 
    echo "What is your filament loading gap in mm? [amount above Y pipe when starting, recommend 25mm]"
    read -p "[mm]" gap
-   if [ -z "$gap" ]
-      then
-         echo "Input cannot be blank."
+   if [ -z "$gap" ]; then
+      echo "Input cannot be blank."
       exit 0
    fi
 
-   if  [[ "$gap" != ?(-)+([0-9]) ]]
-      then
-         echo "Input has to be a number."
+   if  [[ "$gap" != ?(-)+([0-9]) ]]; then
+      echo "Input has to be a number."
       exit 0
    fi
    
-   
-
    echo "What is the lenght of the tube from the Y pipe to the extruder in mm?"
    read -p "[mm]" etube
-   if [ -z "$etube" ]
-      then
-         echo "Input cannot be blank."
+   if [ -z "$etube" ]; then
+      echo "Input cannot be blank."
       exit 0
    fi
 
-   if [[ "$etube" != ?(-)+([0-9]) ]]
-      then
-         echo "Input has to be a number."
+   if [[ "$etube" != ?(-)+([0-9]) ]]; then
+      echo "Input has to be a number."
       exit 0
    fi
    
