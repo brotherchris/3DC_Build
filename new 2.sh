@@ -275,43 +275,43 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          echo "START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature]" >> $Start_G_File
       fi
 
-cat >> $Start_G_File << SGF1
-G90 ;absolute mode
-M82 ;absolute extrusion mode
-G92 E0
-G0 X0 $but_axis$but_ini_loc F2000 ; move to button
-G0 $but_axis$but_press F2000 ; press button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_press F2000 ; press button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_press F2000 ; press button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_press F2000 ; press button
-G4 P3200 ; wait for 7 pulses
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-G4 P2000 ; wait for it to home
-G0 $but_axis$but_press F2000 ; press button
-G4 $t0dwell ; wait for 550 milliseconds
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-T0
-G4 P2000 ; all done
-G0 $but_axis$but_press F2000 ; press button
-G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
-G0 $but_axis$but_ini_loc F2000 ; move away from button
-M400 ; make sure moves are all done before we load
-G0 E$gears_to_nozzle F500 ; Load to nozzle
-G0 X$purge_line_start_x Y$purge_line_start_y Z.2 F1000; move to extruders assigned purge line
-G0 Y0 E60; purge the extruder while moving to Y min.
-G0 X$((purge_line_start_x-1)); purge the extruder.
-G0 Y$but_ini_loc E105; purge the extruder.
-G4 P2000 ; all done
-SGF1
+	   cat >> $Start_G_File << EOF
+	   G90 ;absolute mode
+	   M82 ;absolute extrusion mode
+	   G92 E0
+	   G0 X0 $but_axis$but_ini_loc F2000 ; move to button
+	   G0 $but_axis$but_press F2000 ; press button
+	   G4 P150 ; wait for 150 ms
+	   G0 $but_axis$but_ini_loc F2000 ; unpress button
+	   G4 P150 ; wait for 150 ms
+	   G0 $but_axis$but_press F2000 ; press button
+	   G4 P150 ; wait for 150 ms
+	   G0 $but_axis$but_ini_loc F2000 ; unpress button
+	   G4 P150 ; wait for 150 ms
+	   G0 $but_axis$but_press F2000 ; press button
+	   G4 P150 ; wait for 150 ms
+	   G0 $but_axis$but_ini_loc F2000 ; unpress button
+	   G4 P150 ; wait for 150 ms
+	   G0 $but_axis$but_press F2000 ; press button
+	   G4 P3200 ; wait for 7 pulses
+	   G0 $but_axis$but_ini_loc F2000 ; unpress button
+	   G4 P2000 ; wait for it to home
+	   G0 $but_axis$but_press F2000 ; press button
+	   G4 $t0dwell ; wait for 550 milliseconds
+	   G0 $but_axis$but_ini_loc F2000 ; unpress button
+	   T0
+	   G4 P2000 ; all done
+	   G0 $but_axis$but_press F2000 ; press button
+	   G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
+	   G0 $but_axis$but_ini_loc F2000 ; move away from button
+	   M400 ; make sure moves are all done before we load
+	   G0 E$gears_to_nozzle F500 ; Load to nozzle
+	   G0 X$purge_line_start_x Y$purge_line_start_y Z.2 F1000; move to extruders assigned purge line
+      G0 Y0 E60; purge the extruder while moving to Y min.
+      G0 X$((purge_line_start_x-1)); purge the extruder.
+      G0 Y$but_ini_loc E105; purge the extruder.
+      G4 P2000 ; all done
+      EOF
       
       if [[ $firmware == "KLIPPER" ]]; then
          echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Start_G_File
@@ -323,39 +323,39 @@ SGF1
       if [[ $firmware == "KLIPPER" ]]; then
          echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $End_G_File
       fi
-cat >> $End_G_File << EGF1
-G90 ;absolute mode
-G92 E0
-G0 E-2 F2400; retract to prevent blobbing
-G92 E0
-G0 X0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
-G91 ; move to relative mode
-M83
-G92 E0;
-G0 E-25 F500 ; retract a bit, adjust this to tune waste
-G0 E25 F1500 ;
-G0 E-5 F500 ;
-G0 E5 F1500 ;
-G0 E-1 F500 ;
-G0 E1 F1500 ;
-G0 E-25 F500 ;
-M106 S255
-M109 S180; cool down to prevent swelling
-G0 E24 F1500 ; last tip dip with cold tip
-G0 E-24 F500 ; last tip dip with cold tip
-M109 S150; cool down to prevent swelling
-M109 S180; ok... go back up in temp so we can move the extruder
-G0 E-50 F500 ; back out of the extruder
-G92 E0
-G0 E-50 F500 ; back out of the extruder
-G92 E0
-M107 ;
-G0 Y3 F2000 ; press button
-G4 P2800 ; wait for 6 pulses
-G0 Y-3 F2000 ; unpress button
-G90
-M83
-EGF1
+      cat >> $End_G_File << EOF
+      G90 ;absolute mode
+      G92 E0
+      G0 E-2 F2400; retract to prevent blobbing
+      G92 E0
+      G0 X0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+      G91 ; move to relative mode
+      M83
+      G92 E0;
+      G0 E-25 F500 ; retract a bit, adjust this to tune waste
+      G0 E25 F1500 ;
+      G0 E-5 F500 ;
+      G0 E5 F1500 ;
+      G0 E-1 F500 ;
+      G0 E1 F1500 ;
+      G0 E-25 F500 ;
+      M106 S255
+      M109 S180; cool down to prevent swelling
+      G0 E24 F1500 ; last tip dip with cold tip
+      G0 E-24 F500 ; last tip dip with cold tip
+      M109 S150; cool down to prevent swelling
+      M109 S180; ok... go back up in temp so we can move the extruder
+      G0 E-50 F500 ; back out of the extruder
+      G92 E0
+      G0 E-50 F500 ; back out of the extruder
+      G92 E0
+      M107 ;
+      G0 Y3 F2000 ; press button
+      G4 P2800 ; wait for 6 pulses
+      G0 Y-3 F2000 ; unpress button
+      G90
+      M83
+      EOF
       
       if [[ $firmware == "KLIPPER" ]]; then
          echo "END_PRINT" >> $End_G_File
@@ -364,125 +364,125 @@ EGF1
       #Start building tool gcode file.
 
       echo -e ";Copy and paste everything into TOOL CHANGE gcode window" >> $Tool_G_File
-cat >> $Tool_G_File << TGF1
-{if previous_extruder>-1}
-{if next_extruder!=previous_extruder}
-EOF
-if [[ $firmware == "KLIPPER" ]]; then
-   echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $Tool_G_File
-fi
-cat >> $Tool_G_File << EOF
-G0 E-2 F2400; retract to prevent blobbing
-G92 E0
-G90 ;absolute mode
-G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
-G91 ; move to relative mode
-M83
-G92 E0;
-G0 E-25 F500 ; retract a bit, adjust this to tune waste
-G0 E25 F1500 ;
-G0 E-5 F500 ;
-G0 E5 F1500 ;
-G0 E-1 F500 ;
-G0 E1 F1500 ;
-G0 E-25 F500 ;
-TGF1
+      cat >> $Tool_G_File << EOF
+      {if previous_extruder>-1}
+      {if next_extruder!=previous_extruder}
+      EOF
+      if [[ $firmware == "KLIPPER" ]]; then
+         echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=0" >> $Tool_G_File
+      fi
+      cat >> $Tool_G_File << EOF
+      G0 E-2 F2400; retract to prevent blobbing
+      G92 E0
+      G90 ;absolute mode
+      G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+      G91 ; move to relative mode
+      M83
+      G92 E0;
+      G0 E-25 F500 ; retract a bit, adjust this to tune waste
+      G0 E25 F1500 ;
+      G0 E-5 F500 ;
+      G0 E5 F1500 ;
+      G0 E-1 F500 ;
+      G0 E1 F1500 ;
+      G0 E-25 F500 ;
+      EOF
 
       if [[ $CLI_No_TEMP != "NO_TEMP" ]]; then
-cat >> $Tool_G_File << TGF2
-M106 S255
-M109 S180; cool down to prevent swelling
-G0 E24 F1500 ; last tip dip with cold tip
-G0 E-24 F500 ; last tip dip with cold tip
-M109 S150; cool down to prevent swelling
-M109 S180; ok... go back up in temp so we can move the extruder
-G0 E-50 F500 ; back out of the extruder
-G92 E0
-G0 E-50 F500 ; back out of the extruder
-G92 E0
-M107 ;
-M104 S[temperature];
-TGF2
+         cat >> $Tool_G_File << EOF
+         M106 S255
+         M109 S180; cool down to prevent swelling
+         G0 E24 F1500 ; last tip dip with cold tip
+         G0 E-24 F500 ; last tip dip with cold tip
+         M109 S150; cool down to prevent swelling
+         M109 S180; ok... go back up in temp so we can move the extruder
+         G0 E-50 F500 ; back out of the extruder
+         G92 E0
+         G0 E-50 F500 ; back out of the extruder
+         G92 E0
+         M107 ;
+         M104 S[temperature];
+         EOF
       else
           echo ";NO TEMP SET" >> $Tool_G_File
       fi
 
-cat >> $Tool_G_File << TGF3
-G0 Y3 F2000
-{if next_extruder==0}
-G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
-{endif}
-{if next_extruder==1}
-G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pulse time
-{endif}
-{if next_extruder==2}
-G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three pulse time
-{endif}
-{if next_extruder==3}
-G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pulse time
-{endif}
-G0 Y-3 F2000
-G0 E-75 F500 ; continue to back out of the extruder
-M400 ; Wait for extruder to backout
-G0 Y3 F2000
-{if current_extruder==0}
-G4 $load_sec_0 ;unloading extruder {current_extruder}
-G0 Y-3 F2000
-G4 P400
-M400 ;Make sure everything is done on unload
-{endif}
-{if current_extruder==1}
-G4 $load_sec_1 ;unloading extruder {current_extruder}
-G0 Y-3 F2000
-G4 P400
-M400 ;Make sure everything is done on unload
-{endif}
-{if current_extruder==2}
-G4 $load_sec_2 ;unloading extruder {current_extruder}
-G0 Y-3 F2000
-G4 P400
-M400 ;Make sure everything is done on unload
-{endif}
-{if current_extruder==3}
-G4 $load_sec_3 ;unloading extruder {current_extruder}
-G0 Y-3 F2000
-G4 P400
-M400 ;Make sure everything is done on unload
-{endif}
-{if next_extruder==0}
-G0 Y3 F2000
-G4 $load_sec_0 ;loading extruder {next_extruder}
-{endif}
-{if next_extruder==1}
-G0 Y3 F2000
-G4 $load_sec_1 ;loading extruder {next_extruder}
-{endif}
-{if next_extruder==2}
-G0 Y3 F2000
-G4 $load_sec_2 ;loading extruder {next_extruder}
-{endif}
-{if next_extruder==3}
-G0 Y3 F2000
-G4 $load_sec_3 ;loading extruder {next_extruder}
-{endif}
-G0 Y-3 F2000;
-G4 P400
-M400 ; make sure moves are all done before extruder moves
-G0 E$gears_to_nozzle F500 ; <<<--- adjust this E value to tune extruder loading
-G4 P400
-G92 E0
-M104 S[temperature];
-M106 S[max_fan_speed];
-TGF3
+      cat >> $Tool_G_File << EOF
+      G0 Y3 F2000
+      {if next_extruder==0}
+      G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
+      {endif}
+      {if next_extruder==1}
+      G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pulse time
+      {endif}
+      {if next_extruder==2}
+      G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three pulse time
+      {endif}
+      {if next_extruder==3}
+      G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pulse time
+      {endif}
+      G0 Y-3 F2000
+      G0 E-75 F500 ; continue to back out of the extruder
+      M400 ; Wait for extruder to backout
+      G0 Y3 F2000
+      {if current_extruder==0}
+      G4 $load_sec_0 ;unloading extruder {current_extruder}
+      G0 Y-3 F2000
+      G4 P400
+      M400 ;Make sure everything is done on unload
+      {endif}
+      {if current_extruder==1}
+      G4 $load_sec_1 ;unloading extruder {current_extruder}
+      G0 Y-3 F2000
+      G4 P400
+      M400 ;Make sure everything is done on unload
+      {endif}
+      {if current_extruder==2}
+      G4 $load_sec_2 ;unloading extruder {current_extruder}
+      G0 Y-3 F2000
+      G4 P400
+      M400 ;Make sure everything is done on unload
+      {endif}
+      {if current_extruder==3}
+      G4 $load_sec_3 ;unloading extruder {current_extruder}
+      G0 Y-3 F2000
+      G4 P400
+      M400 ;Make sure everything is done on unload
+      {endif}
+      {if next_extruder==0}
+      G0 Y3 F2000
+      G4 $load_sec_0 ;loading extruder {next_extruder}
+      {endif}
+      {if next_extruder==1}
+      G0 Y3 F2000
+      G4 $load_sec_1 ;loading extruder {next_extruder}
+      {endif}
+      {if next_extruder==2}
+      G0 Y3 F2000
+      G4 $load_sec_2 ;loading extruder {next_extruder}
+      {endif}
+      {if next_extruder==3}
+      G0 Y3 F2000
+      G4 $load_sec_3 ;loading extruder {next_extruder}
+      {endif}
+      G0 Y-3 F2000;
+      G4 P400
+      M400 ; make sure moves are all done before extruder moves
+      G0 E$gears_to_nozzle F500 ; <<<--- adjust this E value to tune extruder loading
+      G4 P400
+      G92 E0
+      M104 S[temperature];
+      M106 S[max_fan_speed];
+      EOF
       if [[ $firmware == "KLIPPER" ]]; then
          echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Tool_G_File
       fi
-cat >> $Tool_G_File << TGF4
-G90 ; move to absolute mode
-M83
-{endif}
-{endif}
-TGF4
+      cat >> $Tool_G_File << EOF
+      G90 ; move to absolute mode
+      M83
+      {endif}
+      {endif}
+      EOF
 
       clear
       echo ""
@@ -644,82 +644,82 @@ else
       rm $Rate4_Test_G_File
    fi
 
-cat >> $Rate4_Test_G_File << TGF1
-G28 ;We will home 3 times incase sensorless hoking is having issues
-G28
-G28
-G90 ;absolute mode
-G0 $but_axis$but_ini_loc F2000 ; move to button
-G92 E0
-G0 $but_axis$but_press F2000 ; press button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_press F2000 ; press button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_press F2000 ; press button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-G4 P150 ; wait for 150 ms
-G0 $but_axis$but_press F2000 ; press button
-G4 P3200 ; wait for 7 pulses
-G0 $but_axis$but_ini_loc F2000 ; unpress button
-G4 P2000 ; wait for it to home
-G91 ; move to relative mode
-M83
-G92 E0;
-;test extruder 1 after home
-G0 Y3 F2000
-G4 $t0dwell ; dwell for 0.5 seconds - adjust this to match your machines two pulse time
-G0 Y-3 F2000
-G4 P400
-G0 Y3 F2000
-G4 $mili_sec_load
-G0 Y-3
-G4 P2000 ; give 2 seconds to measure
-;test extruder 2
-G0 Y3 F2000
-G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pulse time
-G0 Y-3 F2000
-G4 P400
-G0 Y3 F2000
-G4 $mili_sec_load ;back out 1
-G0 Y-3
-G4 P400
-G0 Y3 F2000
-G4 $mili_sec_load ;load 2
-G0 Y-3
-G4 P2000 ; give 2 seconds to measure
-;test extruder 3
-G0 Y3 F2000
-G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines two pulse time
-G0 Y-3 F2000
-G4 P400
-G0 Y3 F2000
-G4 $mili_sec_load ;back out 2
-G0 Y-3
-G4 P400
-G0 Y3 F2000
-G4 $mili_sec_load ;load 3
-G0 Y-3
-G4 P2000 ; give 2 seconds to measure
-;test extruder 4
-G0 Y3 F2000
-G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines two pulse time
-G0 Y-3 F2000
-G4 P400
-G0 Y3 F2000
-G4 $mili_sec_load ;back out 3
-G0 Y-3
-G4 P400
-G0 Y3 F2000
-G4 $mili_sec_load ;load 4
-G0 Y-3
-G4 P2000 ; give 2 seconds to measure
-M84 ; motors off
-TGF1
+   cat >> $Rate4_Test_G_File << EOF
+   G28 ;We will home 3 times incase sensorless hoking is having issues
+   G28
+   G28
+   G90 ;absolute mode
+   G0 $but_axis$but_ini_loc F2000 ; move to button
+   G92 E0
+   G0 $but_axis$but_press F2000 ; press button
+   G4 P150 ; wait for 150 ms
+   G0 $but_axis$but_ini_loc F2000 ; unpress button
+   G4 P150 ; wait for 150 ms
+   G0 $but_axis$but_press F2000 ; press button
+   G4 P150 ; wait for 150 ms
+   G0 $but_axis$but_ini_loc F2000 ; unpress button
+   G4 P150 ; wait for 150 ms
+   G0 $but_axis$but_press F2000 ; press button
+   G4 P150 ; wait for 150 ms
+   G0 $but_axis$but_ini_loc F2000 ; unpress button
+   G4 P150 ; wait for 150 ms
+   G0 $but_axis$but_press F2000 ; press button
+   G4 P3200 ; wait for 7 pulses
+   G0 $but_axis$but_ini_loc F2000 ; unpress button
+   G4 P2000 ; wait for it to home
+   G91 ; move to relative mode
+   M83
+   G92 E0;
+   ;test extruder 1 after home
+   G0 Y3 F2000
+   G4 $t0dwell ; dwell for 0.5 seconds - adjust this to match your machines two pulse time
+   G0 Y-3 F2000
+   G4 P400
+   G0 Y3 F2000
+   G4 $mili_sec_load
+   G0 Y-3
+   G4 P2000 ; give 2 seconds to measure
+   ;test extruder 2
+   G0 Y3 F2000
+   G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pulse time
+   G0 Y-3 F2000
+   G4 P400
+   G0 Y3 F2000
+   G4 $mili_sec_load ;back out 1
+   G0 Y-3
+   G4 P400
+   G0 Y3 F2000
+   G4 $mili_sec_load ;load 2
+   G0 Y-3
+   G4 P2000 ; give 2 seconds to measure
+   ;test extruder 3
+   G0 Y3 F2000
+   G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines two pulse time
+   G0 Y-3 F2000
+   G4 P400
+   G0 Y3 F2000
+   G4 $mili_sec_load ;back out 2
+   G0 Y-3
+   G4 P400
+   G0 Y3 F2000
+   G4 $mili_sec_load ;load 3
+   G0 Y-3
+   G4 P2000 ; give 2 seconds to measure
+   ;test extruder 4
+   G0 Y3 F2000
+   G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines two pulse time
+   G0 Y-3 F2000
+   G4 P400
+   G0 Y3 F2000
+   G4 $mili_sec_load ;back out 3
+   G0 Y-3
+   G4 P400
+   G0 Y3 F2000
+   G4 $mili_sec_load ;load 4
+   G0 Y-3
+   G4 P2000 ; give 2 seconds to measure
+   M84 ; motors off
+   EOF
 
    clear
    YELLOW='\033[1;32m'
