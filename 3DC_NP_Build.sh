@@ -249,6 +249,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          purge_line_start_y=$but_ini_loc
          purge_line_end_x=
          purge_line_end_y=
+         last_backout=$((gears_to_nozzle-100))
 
          ############ Save Math variables to parm save file ###################
 
@@ -281,7 +282,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
 
 cat >> $Start_G_File << SGF1
 G90 ;absolute mode
-M82 ;absolute extrusion mode
+M83 ;relitive extrusion mode
 G92 E0
 G0 X0 $but_axis$but_ini_loc F2000 ; move to button
 G0 $but_axis$but_press F2000 ; press button
@@ -303,17 +304,16 @@ G4 P2000 ; wait for it to home
 G0 $but_axis$but_press F2000 ; press button
 G4 $t0dwell ; wait for 550 milliseconds
 G0 $but_axis$but_ini_loc F2000 ; unpress button
-T0
 G4 P2000 ; all done
 G0 $but_axis$but_press F2000 ; press button
 G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
 G0 $but_axis$but_ini_loc F2000 ; move away from button
 M400 ; make sure moves are all done before we load
-G0 E$gears_to_nozzle F500 ; Load to nozzle
-G0 X$purge_line_start_x Y$purge_line_start_y Z.2 F1000; move to extruders assigned purge line
-G0 Y0 E60; purge the extruder while moving to Y min.
+G0 E$gears_to_nozzle F1000 ; Load to nozzle
+G0 X$purge_line_start_x Y$purge_line_start_y Z0.2 F1000; move to extruders assigned purge line
+G0 Y0 E50; purge the extruder while moving to Y min.
 G0 X$((purge_line_start_x-1)); purge the extruder.
-G0 Y$but_ini_loc E105; purge the extruder.
+G0 Y$but_ini_loc E50; purge the extruder.
 G4 P2000 ; all done
 SGF1
       
@@ -394,7 +394,7 @@ TGF2
 
          if [[ $CLI_No_TEMP != "NO_TEMP" ]]; then
 cat >> $Tool_G_File << TGF3
-M106 S255
+M106 S125
 M109 S180; cool down to prevent swelling
 G0 E24 F1500 ; last tip dip with cold tip
 G0 E-24 F500 ; last tip dip with cold tip
@@ -404,6 +404,8 @@ G0 E-50 F500 ; back out of the extruder
 G92 E0
 G0 E-50 F500 ; back out of the extruder
 G92 E0
+G0 E-$last_backout F1000 ; continue to back out of the extruder
+M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
 TGF3
@@ -426,8 +428,7 @@ G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three p
 G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pulse time
 {endif}
 G0 Y-3 F2000
-G0 E-75 F500 ; continue to back out of the extruder
-M400 ; Wait for extruder to backout
+G4 P400
 G0 Y3 F2000
 {if current_extruder==0}
 G4 $load_sec_0 ;unloading extruder {current_extruder}
@@ -472,11 +473,11 @@ G4 $load_sec_3 ;loading extruder {next_extruder}
 G0 Y-3 F2000;
 G4 P400
 M400 ; make sure moves are all done before extruder moves
-G0 E$gears_to_nozzle F500 ; <<<--- adjust this E value to tune extruder loading
+G0 E$gears_to_nozzle F1000 ; <<<--- adjust this E value to tune extruder loading
 G4 P400
 G92 E0
 M104 S[temperature];
-M106 S[max_fan_speed];
+M106 S125;
 TGF4
          if [[ $firmware == "KLIPPER" ]]; then
             echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Tool_G_File
