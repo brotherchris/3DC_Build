@@ -162,7 +162,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             fi
          fi
          echo "Enter T0 kick out length in mm"
-         if  [ -z "${$kick0+x}" ] || [ -z $kick0 ]; then
+         if  [ -z "${kick0+x}" ] || [ -z $kick0 ]; then
             read -p "[ mm ]" kick0
             if [ -z $kick0 ]; then
             echo "Input cannot be blank."
@@ -186,7 +186,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          fi
          echo "Enter T1 kick out length in mm"
          read -p "[ mm ]" kick1
-         if  [ -z "${$kick1+x}" ] || [ -z $kick1 ]; then
+         if  [ -z "${kick1+x}" ] || [ -z $kick1 ]; then
             read -p "[ mm ]" kick1
             if [ -z $kick1 ]; then
             echo "Input cannot be blank."
@@ -208,16 +208,53 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
                fi
             fi
          fi
-         echo "Enter T3 kick out length in mm"
-         read -p "[ mm ]" kick3
-         if [ -z "$kick3" ]; then
+         echo "Enter T2 kick out length in mm"
+         read -p "[ mm ]" kick2
+         if  [ -z "${kick2+x}" ] || [ -z $kick2 ]; then
+            read -p "[ mm ]" kick2
+            if [ -z $kick2 ]; then
             echo "Input cannot be blank."
             exit 0
+            fi
+            if [[ "$kick2" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $kick2 mm ]" kick2
+            kick2="${kick2:=$kick2}"
+            if  [ -z $kick2 ]; then
+               echo ""
+            else
+               if [[ "$kick2" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
-   
-         if [[ "$kick3" != ?(-)+([0-9]) ]]; then
-            echo "Input has to be a number."
+         echo "Enter T3 kick out length in mm"
+         read -p "[ mm ]" kick3
+         if  [ -z "${kick3+x}" ] || [ -z $kick3 ]; then
+            read -p "[ mm ]" kick3
+            if [ -z $kick3 ]; then
+            echo "Input cannot be blank."
             exit 0
+            fi
+            if [[ "$kick3" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $kick3 mm ]" kick3
+            kick3="${kick3:=$kick3}"
+            if  [ -z $kick3 ]; then
+               echo ""
+            else
+               if [[ "$kick3" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
 
          echo "What is the length in mm from the top of the extruder coupler to the gears?"
