@@ -162,7 +162,6 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             fi
          fi
          echo "Enter T0 kick out length in mm"
-         read -p "[ mm ]" kick0
          if  [ -z "${$kick0+x}" ] || [ -z $kick0 ]; then
             read -p "[ mm ]" kick0
             if [ -z $kick0 ]; then
