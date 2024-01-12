@@ -176,7 +176,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $kick0 mm ]" kick0
             kick0="${kick0:=$kick0}"
             if  [ -z $kick0 ]; then
-               echo ""
+               echo "" > /dev/null
             else
                if [[ "$kick0" != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
