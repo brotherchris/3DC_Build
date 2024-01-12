@@ -116,7 +116,8 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          read -p "Press [Enter] to get started..."
          clear
          echo "What is your MAX X size in mm?"
-         if [ $MAXX = false ] || [ -z $MAXX ]; then
+         if [ -z "${MAXX+x}" || [ -z $MAXX ]; then
+            echo $MAXX
             read -p "[ mm ]" MAXX
             if [ -z $MAXX ]; then
                echo "Input cannot be blank."
@@ -139,7 +140,8 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             fi
          fi
          echo "What is your MAX Y size in mm?"
-         if [ $MAXY = false ] || [ -z $MAXY ]; then
+         if [ -z "${MAXY+x}" ] || [ -z $MAXY ]; then
+         echo $MAXY
             read -p "[ mm ]" MAXY
             if [ -z $MAXY ]; then
                echo "Input cannot be blank."
@@ -690,14 +692,14 @@ else
    but_ini_loc=$((but_press-3)) #get close to the button ready to press it
    fil_start_gap=$gap #How far above the Y pipe is you filament start posistion
    ext_feed_tube=$etube #The lenth of the tube to feed extruder measued from black ring on coupler 
-   MAXX=false
-   MAXY=false
-   kick0=false
-   kick1=false
-   kick2=false
-   kick3=false
-   togears=false
-   tonozzle=false
+   #MAXX=false
+   #MAXY=false
+   #kick0=false
+   #kick1=false
+   #kick2=false
+   #kick3=false
+   #togears=false
+   #tonozzle=false
    
    #Send all the setting gathered from questions to answer file for Gcode creation and to answer save file.
    echo "Your firmware is :$firmware" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
