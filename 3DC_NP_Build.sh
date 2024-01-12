@@ -116,7 +116,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          read -p "Press [Enter] to get started..."
          clear
          echo "What is your MAX X size in mm?"
-         if [ -z "${MAXX+x}" || [ -z "$MAXX" ]; then
+         if [ -z "${MAXX+x}" ] || [ -z $MAXX ]; then
             echo "$MAXX"
             read -p "[ mm ]" MAXX
             if [ -z $MAXX ]; then
@@ -140,7 +140,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             fi
          fi
          echo "What is your MAX Y size in mm?"
-         if [ -z "${MAXY+x}" ] || [ -z "$MAXY" ]; then
+         if [ -z "${MAXY+x}" ] || [ -z $MAXY ]; then
          echo "$MAXY"
             read -p "[ mm ]" MAXY
             if [ -z $MAXY ]; then
