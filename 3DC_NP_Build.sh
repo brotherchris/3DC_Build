@@ -116,46 +116,46 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          read -p "Press [Enter] to get started..."
          clear
          echo "What is your MAX X size in mm?"
-         if [ "$MAXX" = false ] || [ -z $MAXX ]; then
+         if [ $MAXX = false ] || [ -z $MAXX ]; then
             read -p "[ mm ]" MAXX
-            if [ -z "$MAXX" ]; then
+            if [ -z $MAXX ]; then
                echo "Input cannot be blank."
                exit 0
             fi
-            if [[ "$MAXX" != ?(-)+([0-9]) ]]; then
+            if [[ $MAXX != ?(-)+([0-9]) ]]; then
                echo "Input has to be a number."
                exit 0
             fi
          else
             read -p "[ $MAXX mm ]" MAXX
             MAXX="${MAXX:=$MAXX}"
-            if  [ -z "$MAXX" ]; then
+            if  [ -z $MAXX ]; then
                echo ""
             else
-               if [[ "$MAXX" != ?(-)+([0-9]) ]]; then
+               if [[ $MAXX != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
                   exit 0
                fi
             fi
          fi
          echo "What is your MAX Y size in mm?"
-         if [ "$MAXY" = false ] || [ -z $MAXY ]; then
+         if [ $MAXY = false ] || [ -z $MAXY ]; then
             read -p "[ mm ]" MAXY
-            if [ -z "$MAXY" ]; then
+            if [ -z $MAXY ]; then
                echo "Input cannot be blank."
                exit 0
             fi
-            if [[ "$MAXY" != ?(-)+([0-9]) ]]; then
+            if [[ $MAXY != ?(-)+([0-9]) ]]; then
                echo "Input has to be a number."
                exit 0
             fi
          else
             read -p "[ $MAXY mm ]" MAXY
             MAXY="${MAXY:=$MAXY}"
-            if  [ -z "$MAXY" ]; then
+            if  [ -z $MAXY ]; then
                echo ""
             else
-               if [[ "$MAXY" != ?(-)+([0-9]) ]]; then
+               if [[ $MAXY != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
                   exit 0
                fi
