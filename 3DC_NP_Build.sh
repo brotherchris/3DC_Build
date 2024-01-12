@@ -130,7 +130,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $MAXX mm ]" MAXX
             MAXX="${MAXX:=$MAXX}"
             if  [ -z $MAXX ]; then
-               #echo ""
+               $something=false
             else
                if [[ $MAXX != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
@@ -153,7 +153,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $MAXY mm ]" MAXY
             MAXY="${MAXY:=$MAXY}"
             if  [ -z $MAXY ]; then
-               #echo ""
+               $something=false
             else
                if [[ $MAXY != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
@@ -176,7 +176,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $kick0 mm ]" kick0
             kick0="${kick0:=$kick0}"
             if  [ -z $kick0 ]; then
-               #echo "" 
+               $something=false 
             else
                if [[ "$kick0" != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
@@ -199,7 +199,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $kick1 mm ]" kick1
             kick1="${kick1:=$kick1}"
             if  [ -z $kick1 ]; then
-               #echo ""
+               $something=false
             else
                if [[ "$kick1" != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
@@ -222,7 +222,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $kick2 mm ]" kick2
             kick2="${kick2:=$kick2}"
             if  [ -z $kick2 ]; then
-               #echo ""
+               $something=false
             else
                if [[ "$kick2" != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
@@ -245,7 +245,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $kick3 mm ]" kick3
             kick3="${kick3:=$kick3}"
             if  [ -z $kick3 ]; then
-               #echo ""
+               $something=false
             else
                if [[ "$kick3" != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
@@ -270,7 +270,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $togears mm ]" togears
             togears="${togears:=$togears}"
             if  [ -z $togears ]; then
-               #echo ""
+               $something=false
             else
                if [[ "$togears" != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
@@ -294,7 +294,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             read -p "[ $tonozzle mm ]" tonozzle
             tonozzle="${tonozzle:=$tonozzle}"
             if  [ -z $tonozzle ]; then
-               #echo ""
+               $something=false
             else
                if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
                   echo "Input has to be a number."
