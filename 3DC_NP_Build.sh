@@ -242,16 +242,17 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
 
          ############ Save questions answers to parm save file ###################
 
-         sed -i '7,14d' $ANS_FILE
-         echo "Max printer size X is : $MAXX" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-         echo "Max printer size Y is : $MAXY" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-         echo "Kick out T0 is : $kick0" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-         echo "Kick out T1 is : $kick1" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-         echo "Kick out T2 is : $kick2" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-         echo "Kick out T3 is : $kick3" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-         echo "Top of extruder coupler to gears : $togears" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-         echo "How many mm from gear to hotend to start extruding : $tonozzle" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-
+         sed -i '6,14d' $ANS_FILE
+         if [ $MAXX != false ]; then
+            echo "Max printer size X is : $MAXX" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+            echo "Max printer size Y is : $MAXY" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+            echo "Kick out T0 is : $kick0" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+            echo "Kick out T1 is : $kick1" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+            echo "Kick out T2 is : $kick2" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+            echo "Kick out T3 is : $kick3" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+            echo "Top of extruder coupler to gears : $togears" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+            echo "How many mm from gear to hotend to start extruding : $tonozzle" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+         fi
          ############### Variables for gcode creation to do all the MATH, depend on all answers provided ###########################
 
          short_travel=$((fil_start_gap+ext_feed_tube+y_tube_short)) #Top load gap, extruder feed tube and Y pipe, this is the total path
