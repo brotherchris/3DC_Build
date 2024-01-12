@@ -72,6 +72,38 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
                if [ $int == 4 ]; then
                   ext_feed_tube=$value2
                fi
+               Line=$value2
+               if [ $int == 5 ]; then
+                  MAXX=$value2
+               fi
+               Line=$value2
+               if [ $int == 6 ]; then
+                  MAXY=$value2
+               fi               
+               Line=$value2
+               if [ $int == 7 ]; then
+                  kick0=$value2
+               fi
+               Line=$value2
+               if [ $int == 8 ]; then
+                  kick1=$value2
+               fi               
+               Line=$value2
+               if [ $int == 9 ]; then
+                  kick2=$value2
+               fi
+               Line=$value2
+               if [ $int == 10 ]; then
+                  kick3=$value2
+               fi               
+               Line=$value2
+               if [ $int == 11 ]; then
+                  togears=$value2
+               fi
+               Line=$value2
+               if [ $int == 12 ]; then
+                  tonozzle=$value2
+               fi               
                ((int++)) #increase int counter
          done < $ANS_FILE #Loop over
 
@@ -210,14 +242,14 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
 
          ############ Save questions answers to parm save file ###################
 
-         echo "Max printer size X is :" $MAXX >> $PARM_SAVE
-         echo "Max printer size Y is :" $MAXY >> $PARM_SAVE
-         echo "Kick out T0 is :" $kick0 >> $PARM_SAVE
-         echo "Kick out T1 is :" $kick1 >> $PARM_SAVE
-         echo "Kick out T2 is :" $kick2 >> $PARM_SAVE
-         echo "Kick out T3 is :" $kick3 >> $PARM_SAVE
-         echo "Top of extruder coupler to gears :" $togears >> $PARM_SAVE
-         echo "How many mm from gear to hotend to start extruding :" $tonozzle >> $PARM_SAVE
+         echo "Max printer size X is : $MAXX" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+         echo "Max printer size Y is : $MAXY" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+         echo "Kick out T0 is : $kick0" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+         echo "Kick out T1 is : $kick1" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+         echo "Kick out T2 is : $kick2" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+         echo "Kick out T3 is : $kick3" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+         echo "Top of extruder coupler to gears : $togears" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+         echo "How many mm from gear to hotend to start extruding : $tonozzle" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
 
          ############### Variables for gcode creation to do all the MATH, depend on all answers provided ###########################
 
@@ -270,6 +302,8 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          echo "T3 Total load length /feed rate *1000 /1 :" $load_sec_3 >> $PARM_SAVE
          echo "Purge line for X starts :" $purge_line_start_x >> $PARM_SAVE
          echo "Pruge line for Y starts :" $purge_line_start_y >> $PARM_SAVE
+
+         
    
 		   #Start building Start Gcode file
          echo -e ";Copy and paste everything into START gcode window" >> $Start_G_File
@@ -623,6 +657,14 @@ else
    but_ini_loc=$((but_press-3)) #get close to the button ready to press it
    fil_start_gap=$gap #How far above the Y pipe is you filament start posistion
    ext_feed_tube=$etube #The lenth of the tube to feed extruder measued from black ring on coupler 
+   MAXX=false
+   MAXY=false
+   kick0=false
+   kick1=false
+   kick2=false
+   kick3=false
+   togears=false
+   tonozzle=false
    
    #Send all the setting gathered from questions to answer file for Gcode creation and to answer save file.
    echo "Your firmware is :$firmware" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
@@ -630,6 +672,14 @@ else
    echo "You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your filament starting gap is :$fil_start_gap" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your PTFE tube above the extruder is  :$ext_feed_tube" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Max printer size X is : $MAXX" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Max printer size Y is : $MAXY" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Kick out T0 is : $kick0" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Kick out T1 is : $kick1" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Kick out T2 is : $kick2" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Kick out T3 is : $kick3" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "Top of extruder coupler to gears : $togears" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   echo "How many mm from gear to hotend to start extruding : $tonozzle" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
 
    ##############################################   
    ########## END OF TESTING QUESTIONS ##########
