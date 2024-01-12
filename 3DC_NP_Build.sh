@@ -643,6 +643,7 @@ TGF5
          echo ""
          echo -e "Good luck!"
          exit 0
+         find $PARM_SAVE -type f -mtime +7 -name 'PARM*.*' -execdir rm -- '{}' \; #remove any parms files older than 7 days
       else
          echo -e "Testing data isn't complete, please restart the script and answer NO"
       fi
