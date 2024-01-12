@@ -185,7 +185,6 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             fi
          fi
          echo "Enter T1 kick out length in mm"
-         read -p "[ mm ]" kick1
          if  [ -z "${kick1+x}" ] || [ -z $kick1 ]; then
             read -p "[ mm ]" kick1
             if [ -z $kick1 ]; then
@@ -209,7 +208,6 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             fi
          fi
          echo "Enter T2 kick out length in mm"
-         read -p "[ mm ]" kick2
          if  [ -z "${kick2+x}" ] || [ -z $kick2 ]; then
             read -p "[ mm ]" kick2
             if [ -z $kick2 ]; then
@@ -233,7 +231,6 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             fi
          fi
          echo "Enter T3 kick out length in mm"
-         read -p "[ mm ]" kick3
          if  [ -z "${kick3+x}" ] || [ -z $kick3 ]; then
             read -p "[ mm ]" kick3
             if [ -z $kick3 ]; then
