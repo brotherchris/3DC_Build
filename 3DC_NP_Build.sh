@@ -242,6 +242,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
 
          ############ Save questions answers to parm save file ###################
 
+         sed -i '7,14d' $ANS_FILE
          echo "Max printer size X is : $MAXX" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
          echo "Max printer size Y is : $MAXY" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
          echo "Kick out T0 is : $kick0" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
