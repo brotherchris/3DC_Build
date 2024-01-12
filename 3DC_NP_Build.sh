@@ -117,7 +117,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          clear
          echo "What is your MAX X size in mm?"
          if [ -z "${MAXX+x}" || [ -z $MAXX ]; then
-            echo $MAXX
+            echo "$MAXX"
             read -p "[ mm ]" MAXX
             if [ -z $MAXX ]; then
                echo "Input cannot be blank."
@@ -141,7 +141,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          fi
          echo "What is your MAX Y size in mm?"
          if [ -z "${MAXY+x}" ] || [ -z $MAXY ]; then
-         echo $MAXY
+         echo "$MAXY"
             read -p "[ mm ]" MAXY
             if [ -z $MAXY ]; then
                echo "Input cannot be blank."
@@ -707,14 +707,14 @@ else
    echo "You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your filament starting gap is :$fil_start_gap" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your PTFE tube above the extruder is  :$ext_feed_tube" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   echo "Max printer size X is : $MAXX" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   echo "Max printer size Y is : $MAXY" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   echo "Kick out T0 is : $kick0" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   echo "Kick out T1 is : $kick1" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   echo "Kick out T2 is : $kick2" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   echo "Kick out T3 is : $kick3" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   echo "Top of extruder coupler to gears : $togears" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   echo "How many mm from gear to hotend to start extruding : $tonozzle" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   #echo "Max printer size X is : $MAXX" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   #echo "Max printer size Y is : $MAXY" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   #echo "Kick out T0 is : $kick0" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   #echo "Kick out T1 is : $kick1" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   #echo "Kick out T2 is : $kick2" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   #echo "Kick out T3 is : $kick3" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   #echo "Top of extruder coupler to gears : $togears" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
+   #echo "How many mm from gear to hotend to start extruding : $tonozzle" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
 
    ##############################################   
    ########## END OF TESTING QUESTIONS ##########
