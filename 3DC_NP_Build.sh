@@ -116,7 +116,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          read -p "Press [Enter] to get started..."
          clear
          echo "What is your MAX X size in mm?"
-         if [ $MAXX == "false" ] then
+         if [ $MAXX == "false" ]; then
             read -p "[ mm ]" MAXX
          else
             read -p "[ $MAXX mm ]" MAXX
