@@ -118,32 +118,49 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          echo "What is your MAX X size in mm?"
          if [ $MAXX == "false" ]; then
             read -p "[ mm ]" MAXX
+            if [ -z "$MAXX" ]; then
+               echo "Input cannot be blank."
+               exit 0
+            fi
+            if [[ "$MAXX" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
          else
             read -p "[ $MAXX mm ]" MAXX
             MAXX="${MAXX:=$MAXX}"
-         fi 
-         if [ -z "$MAXX" ]; then
-            echo "Input cannot be blank."
-            exit 0
+            if  [ -z "$MAXX" ]; then
+               echo ""
+            else
+               if [[ "$MAXX" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
-   
-         if [[ "$MAXX" != ?(-)+([0-9]) ]]; then
-            echo "Input has to be a number."
-            exit 0
-         fi
-
          echo "What is your MAX Y size in mm?"
-         read -p "[ mm ]" MAXY
-         if [ -z "$MAXY" ]; then
-            echo "Input cannot be blank."
-             exit 0
+         if [ $MAXY == "false" ]; then
+            read -p "[ mm ]" MAXY
+            if [ -z "$MAXY" ]; then
+               echo "Input cannot be blank."
+               exit 0
+            fi
+            if [[ "$MAXY" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $MAXY mm ]" MAXY
+            MAXY="${MAXY:=$MAXY}"
+            if  [ -z "$MAXY" ]; then
+               echo ""
+            else
+               if [[ "$MAXY" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
-   
-         if [[ "$MAXY" != ?(-)+([0-9]) ]]; then
-            echo "Input has to be a number."
-            exit 0
-         fi
-
          echo "Enter T0 kick out length in mm"
          read -p "[ mm ]" kick0
          if [ -z "$kick0" ]; then
