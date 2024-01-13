@@ -138,170 +138,170 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
                fi
             fi
          fi
-         echo "What is your MAX Y size in mm?"
-         if [ -z "${MAXY+x}" ] || [ -z $MAXY ]; then
-            read -p "[ mm ]" MAXY
-            if [ -z $MAXY ]; then
-               echo "Input cannot be blank."
-               exit 0
-            fi
-            if [[ $MAXY != ?(-)+([0-9]) ]]; then
-               echo "Input has to be a number."
-               exit 0
-            fi
-         else
-            read -p "[ $MAXY mm ]" MAXY
-            MAXY="${MAXY:=$MAXY}"
-            if  [ -z $MAXY ]; then
-               something=false
-            else
-               if [[ $MAXY != ?(-)+([0-9]) ]]; then
-                  echo "Input has to be a number."
-                  exit 0
-               fi
-            fi
-         fi
-         echo "Enter T0 kick out length in mm"
-         if  [ -z "${kick0+x}" ] || [ -z $kick0 ]; then
-            read -p "[ mm ]" kick0
-            if [ -z $kick0 ]; then
-            echo "Input cannot be blank."
-            exit 0
-            fi
-            if [[ "$kick0" != ?(-)+([0-9]) ]]; then
-               echo "Input has to be a number."
-               exit 0
-            fi
-         else
-            read -p "[ $kick0 mm ]" kick0
-            kick0="${kick0:=$kick0}"
-            if  [ -z $kick0 ]; then
-               something=false 
-            else
-               if [[ "$kick0" != ?(-)+([0-9]) ]]; then
-                  echo "Input has to be a number."
-                  exit 0
-               fi
-            fi
-         fi
-         echo "Enter T1 kick out length in mm"
-         if  [ -z "${kick1+x}" ] || [ -z $kick1 ]; then
-            read -p "[ mm ]" kick1
-            if [ -z $kick1 ]; then
-            echo "Input cannot be blank."
-            exit 0
-            fi
-            if [[ "$kick1" != ?(-)+([0-9]) ]]; then
-               echo "Input has to be a number."
-               exit 0
-            fi
-         else
-            read -p "[ $kick1 mm ]" kick1
-            kick1="${kick1:=$kick1}"
-            if  [ -z $kick1 ]; then
-               something=false
-            else
-               if [[ "$kick1" != ?(-)+([0-9]) ]]; then
-                  echo "Input has to be a number."
-                  exit 0
-               fi
-            fi
-         fi
-         echo "Enter T2 kick out length in mm"
-         if  [ -z "${kick2+x}" ] || [ -z $kick2 ]; then
-            read -p "[ mm ]" kick2
-            if [ -z $kick2 ]; then
-            echo "Input cannot be blank."
-            exit 0
-            fi
-            if [[ "$kick2" != ?(-)+([0-9]) ]]; then
-               echo "Input has to be a number."
-               exit 0
-            fi
-         else
-            read -p "[ $kick2 mm ]" kick2
-            kick2="${kick2:=$kick2}"
-            if  [ -z $kick2 ]; then
-               something=false
-            else
-               if [[ "$kick2" != ?(-)+([0-9]) ]]; then
-                  echo "Input has to be a number."
-                  exit 0
-               fi
-            fi
-         fi
-         echo "Enter T3 kick out length in mm"
-         if  [ -z "${kick3+x}" ] || [ -z $kick3 ]; then
-            read -p "[ mm ]" kick3
-            if [ -z $kick3 ]; then
-            echo "Input cannot be blank."
-            exit 0
-            fi
-            if [[ "$kick3" != ?(-)+([0-9]) ]]; then
-               echo "Input has to be a number."
-               exit 0
-            fi
-         else
-            read -p "[ $kick3 mm ]" kick3
-            kick3="${kick3:=$kick3}"
-            if  [ -z $kick3 ]; then
-               something=false
-            else
-               if [[ "$kick3" != ?(-)+([0-9]) ]]; then
-                  echo "Input has to be a number."
-                  exit 0
-               fi
-            fi
-         fi
-
-         echo "What is the length in mm from the top of the extruder coupler to the gears?"
-         if  [ -z "${togears+x}" ] || [ -z $togears ]; then
-            read -p "[ mm ]" togears
-            if [ -z "$togears" ]; then
-               echo "Input cannot be blank."
-               exit 0
-            fi
-   
-            if [[ "$togears" != ?(-)+([0-9]) ]]; then
-               echo "Input has to be a number."
-               exit 0
-            fi
-         else
-            read -p "[ $togears mm ]" togears
-            togears="${togears:=$togears}"
-            if  [ -z $togears ]; then
-               something=false
-            else
-               if [[ "$togears" != ?(-)+([0-9]) ]]; then
-                  echo "Input has to be a number."
-                  exit 0
-               fi
-            fi
-         fi
-         echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
-         if  [ -z "${tonozzle+x}" ] || [ -z $tonozzle ]; then
-            read -p "[ mm ]" tonozzle
-            if [ -z "$tonozzle" ]; then
-               echo "Input cannot be blank."
-               exit 0
-            fi
-   
-            if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
-               echo "Input has to be a number."
-               exit 0
-            fi
-         else
-            read -p "[ $tonozzle mm ]" tonozzle
-            tonozzle="${tonozzle:=$tonozzle}"
-            if  [ -z $tonozzle ]; then
-               something=false
-            else
-               if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
-                  echo "Input has to be a number."
-                  exit 0
-               fi
-            fi
-         fi
+#         echo "What is your MAX Y size in mm?"
+#         if [ -z "${MAXY+x}" ] || [ -z $MAXY ]; then
+#            read -p "[ mm ]" MAXY
+#            if [ -z $MAXY ]; then
+#               echo "Input cannot be blank."
+#               exit 0
+#            fi
+#            if [[ $MAXY != ?(-)+([0-9]) ]]; then
+#               echo "Input has to be a number."
+#               exit 0
+#            fi
+#         else
+#            read -p "[ $MAXY mm ]" MAXY
+#            MAXY="${MAXY:=$MAXY}"
+#            if  [ -z $MAXY ]; then
+#               something=false
+#            else
+#               if [[ $MAXY != ?(-)+([0-9]) ]]; then
+#                  echo "Input has to be a number."
+#                  exit 0
+#               fi
+#            fi
+#         fi
+#         echo "Enter T0 kick out length in mm"
+#         if  [ -z "${kick0+x}" ] || [ -z $kick0 ]; then
+#            read -p "[ mm ]" kick0
+#            if [ -z $kick0 ]; then
+#            echo "Input cannot be blank."
+#            exit 0
+#            fi
+#            if [[ "$kick0" != ?(-)+([0-9]) ]]; then
+#               echo "Input has to be a number."
+#               exit 0
+#            fi
+#         else
+#            read -p "[ $kick0 mm ]" kick0
+#            kick0="${kick0:=$kick0}"
+#            if  [ -z $kick0 ]; then
+#               something=false 
+#            else
+#               if [[ "$kick0" != ?(-)+([0-9]) ]]; then
+#                  echo "Input has to be a number."
+#                  exit 0
+#               fi
+#            fi
+#         fi
+#         echo "Enter T1 kick out length in mm"
+#         if  [ -z "${kick1+x}" ] || [ -z $kick1 ]; then
+#            read -p "[ mm ]" kick1
+#            if [ -z $kick1 ]; then
+#            echo "Input cannot be blank."
+#            exit 0
+#            fi
+#            if [[ "$kick1" != ?(-)+([0-9]) ]]; then
+#               echo "Input has to be a number."
+#               exit 0
+#            fi
+#         else
+#            read -p "[ $kick1 mm ]" kick1
+#            kick1="${kick1:=$kick1}"
+#            if  [ -z $kick1 ]; then
+#               something=false
+#            else
+#               if [[ "$kick1" != ?(-)+([0-9]) ]]; then
+#                  echo "Input has to be a number."
+#                  exit 0
+#               fi
+#            fi
+#         fi
+#         echo "Enter T2 kick out length in mm"
+#         if  [ -z "${kick2+x}" ] || [ -z $kick2 ]; then
+#            read -p "[ mm ]" kick2
+#            if [ -z $kick2 ]; then
+#            echo "Input cannot be blank."
+#            exit 0
+#            fi
+#            if [[ "$kick2" != ?(-)+([0-9]) ]]; then
+#               echo "Input has to be a number."
+#               exit 0
+#            fi
+#         else
+#            read -p "[ $kick2 mm ]" kick2
+#            kick2="${kick2:=$kick2}"
+#            if  [ -z $kick2 ]; then
+#               something=false
+#            else
+#               if [[ "$kick2" != ?(-)+([0-9]) ]]; then
+#                  echo "Input has to be a number."
+#                  exit 0
+#               fi
+#            fi
+#         fi
+#         echo "Enter T3 kick out length in mm"
+#         if  [ -z "${kick3+x}" ] || [ -z $kick3 ]; then
+#            read -p "[ mm ]" kick3
+#            if [ -z $kick3 ]; then
+#            echo "Input cannot be blank."
+#            exit 0
+#            fi
+#            if [[ "$kick3" != ?(-)+([0-9]) ]]; then
+#               echo "Input has to be a number."
+#               exit 0
+#            fi
+#         else
+#            read -p "[ $kick3 mm ]" kick3
+#            kick3="${kick3:=$kick3}"
+#            if  [ -z $kick3 ]; then
+#               something=false
+#            else
+#               if [[ "$kick3" != ?(-)+([0-9]) ]]; then
+#                  echo "Input has to be a number."
+#                  exit 0
+#               fi
+#            fi
+#         fi
+#
+#         echo "What is the length in mm from the top of the extruder coupler to the gears?"
+#         if  [ -z "${togears+x}" ] || [ -z $togears ]; then
+#            read -p "[ mm ]" togears
+#            if [ -z "$togears" ]; then
+#               echo "Input cannot be blank."
+#               exit 0
+#            fi
+#   
+#            if [[ "$togears" != ?(-)+([0-9]) ]]; then
+#               echo "Input has to be a number."
+#               exit 0
+#            fi
+#         else
+#            read -p "[ $togears mm ]" togears
+#            togears="${togears:=$togears}"
+#            if  [ -z $togears ]; then
+#               something=false
+#            else
+#               if [[ "$togears" != ?(-)+([0-9]) ]]; then
+#                  echo "Input has to be a number."
+#                  exit 0
+#               fi
+#            fi
+#         fi
+#         echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
+#         if  [ -z "${tonozzle+x}" ] || [ -z $tonozzle ]; then
+#            read -p "[ mm ]" tonozzle
+#            if [ -z "$tonozzle" ]; then
+#               echo "Input cannot be blank."
+#               exit 0
+#            fi
+#   
+#            if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
+#               echo "Input has to be a number."
+#               exit 0
+#            fi
+#         else
+#            read -p "[ $tonozzle mm ]" tonozzle
+#            tonozzle="${tonozzle:=$tonozzle}"
+#            if  [ -z $tonozzle ]; then
+#               something=false
+#            else
+#               if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
+#                  echo "Input has to be a number."
+#                  exit 0
+#               fi
+#            fi
+#         fi
 	      #Remove all old Gcode TXT files
          if [ -f $Start_G_File ]; then
             rm $Start_G_File
@@ -613,7 +613,7 @@ M83
 {endif}
 TGF5
 
-         clear
+         #clear
          echo ""
          echo -e "That's it!"
          echo -e "Here are the things you need to enter in PRUSA Slicer"
