@@ -348,7 +348,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          sec_to_load=$(((long_travel/34)+2))
          #disk_usage=$(echo "$disk_usage * 0.01" | bc)
          #echo 'scale=5; a=(20*30)/(4*5); a^3' | bc
-         fil_feed_rate_0=$(echo scale=1; "($short_travel+$init_kickout_0)/$sec_to_load" | bc ) 
+         fil_feed_rate_0=$(echo 'scale=1; ($short_travel+$init_kickout_0)/$sec_to_load' | bc ) 
          fil_feed_rate_1=$(echo "scale=1;($long_travel+$init_kickout_1)/$sec_to_load" | bc )
          fil_feed_rate_2=$(echo "scale=1;($long_travel+$init_kickout_2)/$sec_to_load" | bc )
          fil_feed_rate_3=$(echo "scale=1;($short_travel+$init_kickout_3)/$sec_to_load" | bc )
