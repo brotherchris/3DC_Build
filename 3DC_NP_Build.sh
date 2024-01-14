@@ -350,9 +350,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          short_travel=$((fil_start_gap+ext_feed_tube+y_tube_short)) #Top load gap, extruder feed tube and Y pipe, this is the total path
          long_travel=$((fil_start_gap+ext_feed_tube+y_tube_long))
          sec_to_load=$(((long_travel/34)+2))
-         #disk_usage=$(echo "$disk_usage * 0.01" | bc)
-         #echo 'scale=5; a=(20*30)/(4*5); a^3' | bc
-         fil_feed_rate_0=$(echo "scale=1; $short_travel+$init_kickout_0/$sec_to_load" | bc ) 
+         fil_feed_rate_0=$(echo "scale=1;($short_travel+$init_kickout_0)/$sec_to_load" | bc ) 
          fil_feed_rate_1=$(echo "scale=1;($long_travel+$init_kickout_1)/$sec_to_load" | bc )
          fil_feed_rate_2=$(echo "scale=1;($long_travel+$init_kickout_2)/$sec_to_load" | bc )
          fil_feed_rate_3=$(echo "scale=1;($short_travel+$init_kickout_3)/$sec_to_load" | bc )
@@ -538,10 +536,10 @@ TGF2
          if [[ $CLI_No_TEMP != "NO_TEMP" ]]; then
 cat >> $Tool_G_File << TGF3
 M106 S125
-M109 S180; cool down to prevent swelling
+M109 R180; cool down to prevent swelling
 G0 E24 F1500 ; last tip dip with cold tip
 G0 E-24 F500 ; last tip dip with cold tip
-M109 S150; cool down to prevent swelling
+M109 R150; cool down to prevent swelling
 M109 S180; ok... go back up in temp so we can move the extruder
 TGF3
 
@@ -799,30 +797,14 @@ else
    but_ini_loc=$((but_press-3)) #get close to the button ready to press it
    fil_start_gap=$gap #How far above the Y pipe is you filament start posistion
    ext_feed_tube=$etube #The lenth of the tube to feed extruder measued from black ring on coupler 
-   #MAXX=false
-   #MAXY=false
-   #kick0=false
-   #kick1=false
-   #kick2=false
-   #kick3=false
-   #togears=false
-   #tonozzle=false
-   
+      
    #Send all the setting gathered from questions to answer file for Gcode creation and to answer save file.
    echo "Your firmware is :$firmware" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your button axis is:$but_axis" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your filament starting gap is :$fil_start_gap" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your PTFE tube above the extruder is  :$ext_feed_tube" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   #echo "Max printer size X is : $MAXX" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   #echo "Max printer size Y is : $MAXY" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   #echo "Kick out T0 is : $kick0" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   #echo "Kick out T1 is : $kick1" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   #echo "Kick out T2 is : $kick2" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   #echo "Kick out T3 is : $kick3" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   #echo "Top of extruder coupler to gears : $togears" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   #echo "How many mm from gear to hotend to start extruding : $tonozzle" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-
+   
    ##############################################   
    ########## END OF TESTING QUESTIONS ##########
    ##############################################
