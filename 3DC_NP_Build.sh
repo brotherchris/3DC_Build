@@ -379,6 +379,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          purge_line_end_y=
          extmax=50
          increment=$(($gears_to_nozzle/$extmax))
+         incrementP1=$((($gears_to_nozzle/$extmax)+1))
          remainder=$(($gears_to_nozzle%$extmax))
 
          ############ Save Math variables to parm save file ###################
@@ -543,7 +544,7 @@ M109 S150; cool down to prevent swelling
 M109 S180; ok... go back up in temp so we can move the extruder
 TGF3
 
-for i in $(seq ($increment+1))   # you can also use {0..9}
+for i in $(seq $incrementP1)   # you can also use {0..9}
 do
   echo "G92 E0" >> $Tool_G_File
   echo "G0 E-"$extmax " F1000" >> $Tool_G_File
