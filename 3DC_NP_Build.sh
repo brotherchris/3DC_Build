@@ -543,13 +543,13 @@ M109 S150; cool down to prevent swelling
 M109 S180; ok... go back up in temp so we can move the extruder
 TGF3
 
-for i in $(seq $increment)   # you can also use {0..9}
+for i in $(seq ($increment+1))   # you can also use {0..9}
 do
   echo "G92 E0" >> $Tool_G_File
   echo "G0 E-"$extmax " F1000" >> $Tool_G_File
 done
 echo "G92 E0" >> $Tool_G_File
-echo "G0 E-"($remainder+50) " F1000" >> $Tool_G_File
+echo "G0 E-"$remainder " F1000" >> $Tool_G_File
 
 cat >> $Tool_G_File << TGF4
 M400 ; Wait for extruder to backout
