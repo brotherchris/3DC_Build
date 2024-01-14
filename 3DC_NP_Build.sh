@@ -330,8 +330,8 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          init_kickout_1=$kick1 #Kick out from testing of T1
          init_kickout_2=$kick2 #Kick out from testing of T2
          init_kickout_3=$kick3 #Kick out from testing of T3
-         feed_to_ext=$togears
-         gears_to_nozzle=$tonozzle
+         feed_to_ext=$togears #this is adding load time to button press
+         gears_to_nozzle=$tonozzle #this is extruder turning only
          but_ini_loc=$((but_press-3)) #get close to the button ready to press it
 
          ############ Save questions answers to parm save file ###################
@@ -367,10 +367,10 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             load_to_gear_3=$(echo "scale=1;$feed_to_ext+$short_travel" | bc )
          fi
 
-         load_sec_0="P"$(echo "scale=2;(($load_to_gear_0/$fil_feed_rate_0)*1000)/1+350" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-         load_sec_1="P"$(echo "scale=2;(($load_to_gear_1/$fil_feed_rate_1)*1000)/1+350" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-         load_sec_2="P"$(echo "scale=2;(($load_to_gear_2/$fil_feed_rate_2)*1000)/1+350" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-         load_sec_3="P"$(echo "scale=2;(($load_to_gear_3/$fil_feed_rate_3)*1000)/1+350" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_0="P"$(echo "scale=2;(($load_to_gear_0/$fil_feed_rate_0)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_1="P"$(echo "scale=2;(($load_to_gear_1/$fil_feed_rate_1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_2="P"$(echo "scale=2;(($load_to_gear_2/$fil_feed_rate_2)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_3="P"$(echo "scale=2;(($load_to_gear_3/$fil_feed_rate_3)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
          purge_line_start_x=$printer_x_size
          purge_line_start_y=$but_ini_loc
          purge_line_end_x=
