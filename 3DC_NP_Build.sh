@@ -132,6 +132,9 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
         MAXX=$answer
         break
         done
+        if [ intr -ge 3 ]; then
+         exit 0
+         fi
 # Do cool thing with $db_name
 
          #echo "What is your MAX Y size in mm?"
