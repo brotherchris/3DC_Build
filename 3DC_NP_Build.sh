@@ -115,17 +115,23 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          echo "We need more info about your printer."
          read -p "Press [Enter] to get started..."
          clear
+         intr=0
+         while [ $intr -le 3 ]; do
          echo "What is your MAX X size in mm?"
          read -p "[ Enter MAX ] : " -i $MAXX -e answer
          if [ -z $answer ]; then
             echo "Input cannot be blank."
-            exit 0
+            continue
+            ((intr++))
          elif [[ $answer != ?(-)+([0-9]) ]]; then
             echo "Input has to be a number."
-            exit 0
-        else
+            continue
+            ((intr++))
+        fi
         MAXX=$answer
-         fi
+        break
+        done
+# Do cool thing with $db_name
 
          #echo "What is your MAX Y size in mm?"
 #         if [ -z "${MAXY+x}" ] || [ -z $MAXY ]; then
