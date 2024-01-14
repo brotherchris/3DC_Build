@@ -381,6 +381,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          increment=$(($gears_to_nozzle/$extmax))
          incrementP1=$((($gears_to_nozzle/$extmax)+1))
          remainder=$(($gears_to_nozzle%$extmax))
+         gears_to_nozzle_speed=F1000
 
          ############ Save Math variables to parm save file ###################
 
@@ -446,10 +447,10 @@ SGF1
 for i in $(seq $increment)   # you can also use {0..9}
 do
   echo "G92 E0" >> $Start_G_File
-  echo "G0 E"$extmax " F1000" >> $Start_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Start_G_File
 done
 echo "G92 E0" >> $Start_G_File
-echo "G0 E"$remainder " F1000" >> $Start_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Start_G_File
 
 cat >> $Start_G_File << SGF2
 G0 X$purge_line_start_x Y$purge_line_start_y Z0.2 F1000; move to extruders assigned purge line
@@ -547,10 +548,10 @@ TGF3
 for i in $(seq $incrementP1)   # you can also use {0..9}
 do
   echo "G92 E0" >> $Tool_G_File
-  echo "G0 E-"$extmax " F1000" >> $Tool_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tool_G_File
 done
 echo "G92 E0" >> $Tool_G_File
-echo "G0 E-"$remainder " F1000" >> $Tool_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tool_G_File
 
 cat >> $Tool_G_File << TGF4
 M400 ; Wait for extruder to backout
@@ -626,10 +627,10 @@ TGF5
 for i in $(seq $increment)   # you can also use {0..9}
 do
   echo "G92 E0" >> $Tool_G_File
-  echo "G0 E"$extmax " F1000" >> $Tool_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tool_G_File
 done
 echo "G92 E0" >> $Tool_G_File
-echo "G0 E"$remainder " F1000" >> $Tool_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tool_G_File
 
 cat >> $Tool_G_File << TGF6
 G4 P400
