@@ -122,12 +122,14 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          read -p "[ Enter MAX ] : " -i $MAXX -e answer
          if [ -z $answer ]; then
             echo "Input cannot be blank."
-            continue
             ((intr++))
+            continue
+
          elif [[ $answer != ?(-)+([0-9]) ]]; then
             echo "Input has to be a number."
-            continue
             ((intr++))
+            continue
+
         fi
         MAXX=$answer
         break
