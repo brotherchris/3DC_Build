@@ -377,7 +377,9 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          purge_line_start_y=$but_ini_loc
          purge_line_end_x=
          purge_line_end_y=
-         last_backout=$((gears_to_nozzle-100))
+         extmax=50
+         increment=$(($gears_to_nozzle/$extmax))
+         remainder=$(($gears_to_nozzle%$extmax))
 
          ############ Save Math variables to parm save file ###################
 
@@ -439,13 +441,22 @@ G0 $but_axis$but_press F2000 ; press button
 G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
 G0 $but_axis$but_ini_loc F2000 ; move away from button
 M400 ; make sure moves are all done before we load
-G0 E$gears_to_nozzle F1000 ; Load to nozzle
+SGF1
+for i in $(seq $increment)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Start_G_File
+  echo "G0 E"$extmax " F1000" >> $Start_G_File
+done
+echo "G92 E0" >> $Start_G_File
+echo "G0 E"$remainder " F1000" >> $Start_G_File
+
+cat >> $Start_G_File << SGF2
 G0 X$purge_line_start_x Y$purge_line_start_y Z0.2 F1000; move to extruders assigned purge line
 G0 Y0 E50; purge the extruder while moving to Y min.
 G0 X$((purge_line_start_x-1)); purge the extruder.
 G0 Y$but_ini_loc E50; purge the extruder.
 G4 P2000 ; all done
-SGF1
+SGF2
       
          if [[ $firmware == "KLIPPER" ]]; then
             echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Start_G_File
@@ -530,20 +541,26 @@ G0 E24 F1500 ; last tip dip with cold tip
 G0 E-24 F500 ; last tip dip with cold tip
 M109 S150; cool down to prevent swelling
 M109 S180; ok... go back up in temp so we can move the extruder
-G0 E-50 F500 ; back out of the extruder
-G92 E0
-G0 E-50 F500 ; back out of the extruder
-G92 E0
-G0 E-$last_backout F1000 ; continue to back out of the extruder
+TGF3
+
+for i in $(seq $increment)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tool_G_File
+  echo "G0 E-"$extmax " F1000" >> $Tool_G_File
+done
+echo "G92 E0" >> $Tool_G_File
+echo "G0 E-"($remainder+50) " F1000" >> $Tool_G_File
+
+cat >> $Tool_G_File << TGF4
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
-TGF3
+TGF4
          else
              echo ";NO TEMP SET" >> $Tool_G_File
          fi
 
-cat >> $Tool_G_File << TGF4
+cat >> $Tool_G_File << TGF5
 G0 Y3 F2000
 {if next_extruder==0}
 G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
@@ -603,21 +620,31 @@ G4 $load_sec_3 ;loading extruder {next_extruder}
 G0 Y-3 F2000;
 G4 P400
 M400 ; make sure moves are all done before extruder moves
-G0 E$gears_to_nozzle F1000 ; <<<--- adjust this E value to tune extruder loading
+TGF5
+
+for i in $(seq $increment)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tool_G_File
+  echo "G0 E"$extmax " F1000" >> $Tool_G_File
+done
+echo "G92 E0" >> $Tool_G_File
+echo "G0 E"$remainder " F1000" >> $Tool_G_File
+
+cat >> $Tool_G_File << TGF6
 G4 P400
 G92 E0
 M104 S[temperature];
 M106 S125;
-TGF4
+TGF6
          if [[ $firmware == "KLIPPER" ]]; then
             echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Tool_G_File
          fi
-cat >> $Tool_G_File << TGF5
+cat >> $Tool_G_File << TGF7
 G90 ; move to absolute mode
 M83
 {endif}
 {endif}
-TGF5
+TGF7
 
          #clear
          echo ""
