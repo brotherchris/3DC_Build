@@ -118,6 +118,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          intr=0
          while [ $intr -le 3 ]; do
          echo "What is your MAX X size in mm?"
+         echo "int" $intr 
          read -p "[ Enter MAX ] : " -i $MAXX -e answer
          if [ -z $answer ]; then
             echo "Input cannot be blank."
