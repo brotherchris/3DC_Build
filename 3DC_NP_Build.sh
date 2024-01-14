@@ -120,11 +120,15 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             echo "What is your MAX X size in mm?"
             read -p "[ Enter MAX X ] : " -i $MAXX -e answer
             if [ -z $answer ]; then
+               echo ""
                echo "Input cannot be blank."
+               echo ""
                ((intr++))
                continue
            elif [[ $answer != ?(-)+([0-9]) ]]; then
+               echo ""
                echo "Input has to be a number."
+               echo ""
                ((intr++))
                continue
             fi
@@ -136,14 +140,19 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          fi
          intr=0
          while [ $intr -le 3 ]; do
+            echo ""
             echo "What is your MAX Y size in mm?"
             read -p "[ Enter MAX Y ] : " -i $MAXY -e answer
             if [ -z $answer ]; then
+               echo ""
                echo "Input cannot be blank."
+               echo ""
                ((intr++))
                continue
            elif [[ $answer != ?(-)+([0-9]) ]]; then
+               echo ""
                echo "Input has to be a number."
+               echo ""
                ((intr++))
                continue
             fi
@@ -155,14 +164,19 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          fi
          intr=0
          while [ $intr -le 3 ]; do
+            echo ""
             echo "Enter T0 kick out length in mm"
             read -p "[ Enter Kick out for T0 ] : " -i $kick0 -e answer
             if [ -z $answer ]; then
+               echo ""
                echo "Input cannot be blank."
+               echo ""
                ((intr++))
                continue
            elif [[ $answer != ?(-)+([0-9]) ]]; then
+               echo ""
                echo "Input has to be a number."
+               echo ""
                ((intr++))
                continue
             fi
@@ -174,14 +188,19 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          fi
          intr=0
          while [ $intr -le 3 ]; do
+            echo ""
             echo "Enter T1 kick out length in mm"
             read -p "[ Enter Kick out for T1 ] : " -i $kick1 -e answer
             if [ -z $answer ]; then
+               echo ""
                echo "Input cannot be blank."
+               echo ""
                ((intr++))
                continue
            elif [[ $answer != ?(-)+([0-9]) ]]; then
+               echo ""
                echo "Input has to be a number."
+               echo ""
                ((intr++))
                continue
             fi
@@ -193,14 +212,19 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          fi
          intr=0
          while [ $intr -le 3 ]; do
+            echo ""
             echo "Enter T2 kick out length in mm"
             read -p "[ Enter Kick out for T2 ] : " -i $kick2 -e answer
             if [ -z $answer ]; then
+               echo ""
                echo "Input cannot be blank."
+               echo ""
                ((intr++))
                continue
            elif [[ $answer != ?(-)+([0-9]) ]]; then
+               echo ""
                echo "Input has to be a number."
+               echo ""
                ((intr++))
                continue
             fi
@@ -212,14 +236,19 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          fi
          intr=0
          while [ $intr -le 3 ]; do
+            echo ""
             echo "Enter T3 kick out length in mm"
             read -p "[ Enter Kick out for T3 ] : " -i $kick3 -e answer
             if [ -z $answer ]; then
+               echo ""
                echo "Input cannot be blank."
+               echo ""
                ((intr++))
                continue
            elif [[ $answer != ?(-)+([0-9]) ]]; then
+               echo ""
                echo "Input has to be a number."
+               echo ""
                ((intr++))
                continue
             fi
@@ -229,79 +258,55 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          if [ $intr -ge 3 ]; then
             exit 0
          fi
-#         echo "Enter T3 kick out length in mm"
-#         if  [ -z "${kick3+x}" ] || [ -z $kick3 ]; then
-#            read -p "[ mm ]" kick3
-#            if [ -z $kick3 ]; then
-#            echo "Input cannot be blank."
-#            exit 0
-#            fi
-#            if [[ "$kick3" != ?(-)+([0-9]) ]]; then
-#               echo "Input has to be a number."
-#               exit 0
-#            fi
-#         else
-#            read -p "[ $kick3 mm ]" kick3
-#            kick3="${kick3:=$kick3}"
-#            if  [ -z $kick3 ]; then
-#               something=false
-#            else
-#               if [[ "$kick3" != ?(-)+([0-9]) ]]; then
-#                  echo "Input has to be a number."
-#                  exit 0
-#               fi
-#            fi
-#         fi
-#
-#         echo "What is the length in mm from the top of the extruder coupler to the gears?"
-#         if  [ -z "${togears+x}" ] || [ -z $togears ]; then
-#            read -p "[ mm ]" togears
-#            if [ -z "$togears" ]; then
-#               echo "Input cannot be blank."
-#               exit 0
-#            fi
-#   
-#            if [[ "$togears" != ?(-)+([0-9]) ]]; then
-#               echo "Input has to be a number."
-#               exit 0
-#            fi
-#         else
-#            read -p "[ $togears mm ]" togears
-#            togears="${togears:=$togears}"
-#            if  [ -z $togears ]; then
-#               something=false
-#            else
-#               if [[ "$togears" != ?(-)+([0-9]) ]]; then
-#                  echo "Input has to be a number."
-#                  exit 0
-#               fi
-#            fi
-#         fi
-#         echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
-#         if  [ -z "${tonozzle+x}" ] || [ -z $tonozzle ]; then
-#            read -p "[ mm ]" tonozzle
-#            if [ -z "$tonozzle" ]; then
-#               echo "Input cannot be blank."
-#               exit 0
-#            fi
-#   
-#            if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
-#               echo "Input has to be a number."
-#               exit 0
-#            fi
-#         else
-#            read -p "[ $tonozzle mm ]" tonozzle
-#            tonozzle="${tonozzle:=$tonozzle}"
-#            if  [ -z $tonozzle ]; then
-#               something=false
-#            else
-#               if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
-#                  echo "Input has to be a number."
-#                  exit 0
-#               fi
-#            fi
-#         fi
-	      #Remove all old Gcode TXT files
+         intr=0
+         while [ $intr -le 3 ]; do
+            echo ""
+            echo "What is the length in mm from the top of the extruder coupler to the gears?"
+            read -p "[ Enter lenght in mm ] : " -i $togears -e answer
+            if [ -z $answer ]; then
+               echo ""
+               echo "Input cannot be blank."
+               echo ""
+               ((intr++))
+               continue
+           elif [[ $answer != ?(-)+([0-9]) ]]; then
+               echo ""
+               echo "Input has to be a number."
+               echo ""
+               ((intr++))
+               continue
+            fi
+         togears=$answer
+         break
+         done
+         if [ $intr -ge 3 ]; then
+            exit 0
+         fi
+         intr=0
+         while [ $intr -le 3 ]; do
+            echo ""
+            echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
+            read -p "[ Enter lenght in mm ] : " -i $tonozzle -e answer
+            if [ -z $answer ]; then
+               echo ""
+               echo "Input cannot be blank."
+               echo ""
+               ((intr++))
+               continue
+           elif [[ $answer != ?(-)+([0-9]) ]]; then
+               echo ""
+               echo "Input has to be a number."
+               echo ""
+               ((intr++))
+               continue
+            fi
+         tonozzle=$answer
+         break
+         done
+         if [ $intr -ge 3 ]; then
+            exit 0
+         fi
+
          if [ -f $Start_G_File ]; then
             rm $Start_G_File
          fi
@@ -681,7 +686,9 @@ else
    read -p  "[PRUSA,MARLIN,KLIPPER]" firmware
    USER_ANS1=$(echo "${firmware^^}")
    if [ -z "$USER_ANS1" ]; then
+      echo ""
       echo "Input cannot be blank."
+      echo ""
       exit 0
    fi
 
@@ -694,7 +701,9 @@ else
    read -p "[X or Y]" axis
    USER_ANS2=$(echo "${axis^^}")
    if [ -z "$USER_ANS2" ]; then
+      echo ""
       echo "Input cannot be blank."
+      echo ""
       exit 0
    fi
 
@@ -707,36 +716,48 @@ else
    echo "Where do we have go on the $but_axis axis to click the Chameleon button [in mm]?"
    read -p "[ mm ]" press
    if [ -z "$press" ]; then
+      echo ""
       echo "Input cannot be blank."
+      echo ""
       exit 0
    fi
 
    if [[ "$press" != ?(-)+([0-9]) ]]; then
+      echo ""
       echo "Input has to be a number."
+      echo ""
       exit 0
    fi
    
    echo "What is your filament loading gap in mm? [amount above Y pipe when starting, recommend 25mm]"
    read -p "[mm]" gap
    if [ -z "$gap" ]; then
+      echo ""
       echo "Input cannot be blank."
+      echo ""
       exit 0
    fi
 
    if  [[ "$gap" != ?(-)+([0-9]) ]]; then
+      echo ""
       echo "Input has to be a number."
+      echo ""
       exit 0
    fi
    
    echo "What is the lenght of the tube from the Y pipe to the extruder in mm?"
    read -p "[mm]" etube
    if [ -z "$etube" ]; then
+      echo ""
       echo "Input cannot be blank."
+      echo ""
       exit 0
    fi
 
    if [[ "$etube" != ?(-)+([0-9]) ]]; then
+      echo ""
       echo "Input has to be a number."
+      echo ""
       exit 0
    fi
    
