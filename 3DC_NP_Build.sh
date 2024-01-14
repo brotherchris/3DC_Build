@@ -116,29 +116,16 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          read -p "Press [Enter] to get started..."
          clear
          echo "What is your MAX X size in mm?"
-         if [ -z "${MAXX+x}" ] || [ -z $MAXX ]; then
-            read -p "[ mm ]" MAXX
-            if [ -z $MAXX ]; then
-               echo "Input cannot be blank."
-               exit 0
-            fi
-            if [[ $MAXX != ?(-)+([0-9]) ]]; then
-               echo "Input has to be a number."
-               exit 0
-            fi
-         else
-            read -p "[ $MAXX mm ]" MAXX
-            MAXX="${MAXX:=$MAXX}"
-            if  [ -z $MAXX ]; then
-               something=false
-            else
-               if [[ $MAXX != ?(-)+([0-9]) ]]; then
-                  echo "Input has to be a number."
-                  exit 0
-               fi
-            fi
+         read -p "[ Enter MAX ] : " -i $MAXX -e answer
+         if [ -z $MAXX ]; then
+            echo "Input cannot be blank."
+            exit 0
          fi
-#         echo "What is your MAX Y size in mm?"
+         if [[ $MAXX != ?(-)+([0-9]) ]]; then
+            echo "Input has to be a number."
+            exit 0
+         fi
+         #echo "What is your MAX Y size in mm?"
 #         if [ -z "${MAXY+x}" ] || [ -z $MAXY ]; then
 #            read -p "[ mm ]" MAXY
 #            if [ -z $MAXY ]; then
