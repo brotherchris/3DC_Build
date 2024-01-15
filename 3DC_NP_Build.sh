@@ -1134,6 +1134,10 @@ KTF1
 
 #Tip test info#
 
+if [ -f $Tip_G_File ]; then
+   rm -f $Tip_G_File
+fi
+
 cat >> $Tip_G_File << TTF1
 G28 ; home all without mesh bed level
 M109 S200
