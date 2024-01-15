@@ -1177,7 +1177,7 @@ done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 
-cat >> $Kick_Test_G_File << TTF2
+cat >> $Tip_G_File << TTF2
 G4 P5000
 ;loaded to hotend
 
@@ -1215,7 +1215,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF3
+cat >> $Tip_G_File << TTF3
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
@@ -1253,7 +1253,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF4
+cat >> $Tip_G_File << TTF4
 G4 P5000
 ;loaded to hotend
 
@@ -1290,7 +1290,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF5
+cat >> $Tip_G_File << TTF5
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
@@ -1326,7 +1326,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF6
+cat >> $Tip_G_File << TTF6
 G4 P5000
 ;loaded to hotend
 
@@ -1363,7 +1363,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF7
+cat >> $Tip_G_File << TTF7
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
@@ -1396,7 +1396,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF8
+cat >> $Tip_G_File << TTF8
 G4 P5000
 ;loaded to hotend
 
@@ -1433,7 +1433,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF9
+cat >> $Tip_G_File << TTF9
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
@@ -1465,7 +1465,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF10
+cat >> $Tip_G_File << TTF10
 G4 P5000
 ;loaded to hotend
 
@@ -1502,7 +1502,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF11
+cat >> $Tip_G_File << TTF11
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
@@ -1534,7 +1534,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF12
+cat >> $Tip_G_File << TTF12
 G4 P5000
 ;loaded to hotend
 
@@ -1571,7 +1571,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF13
+cat >> $Tip_G_File << TTF13
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
@@ -1603,7 +1603,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF14
+cat >> $Tip_G_File << TTF14
 G4 P5000
 ;loaded to hotend
 
@@ -1640,7 +1640,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF15
+cat >> $Tip_G_File << TTF15
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
@@ -1672,7 +1672,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF16
+cat >> $Tip_G_File << TTF16
 G4 P5000
 ;loaded to hotend
 
@@ -1709,7 +1709,7 @@ do
 done
 echo "G92 E0" >> $Tip_G_File
 echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
-cat >> $Kick_Test_G_File << TTF17
+cat >> $Tip_G_File << TTF17
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
