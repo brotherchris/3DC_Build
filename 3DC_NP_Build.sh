@@ -13,15 +13,31 @@ fiffties=8
 
 date=$(date +%Y-%m-%d_%H:%M:%S)
 CLI_No_TEMP=$1  #Pull in CLI parm to take out temp changes
+CLI_Kick_Test=$1
 Start_G_File=Start_Gcode.txt #Text file for your Start gcode
 End_G_File=End_Gcode.txt #Text file for your End gcode
 Tool_G_File=Tool_Gcode.txt #Text file for your Tool change gcode
 Rate4_Test_G_File=Rate4Test_Gcode.txt #Text file for your rate test gcode
+Kick_Test_G_File=Kick_test_Gcode.txt
 ANS_FILE=ANS_FILE.txt #File to store your test run answers in
 PARM_SAVE=ParmSave_$date.txt
 y_tube_long=115 #measured from black lock ring with PTFE seated
 y_tube_short=80 #2 outside shorter paths
 
+if [[ $CLI_Kick_Test == "KICK_TEST" ]]; then
+   if [ -z "$USER_ANS" ]; then
+   echo "Here is your kick out calibration gcode"
+   echo "This will test the final Chameleon to Extruder filament amout"
+   echo "It will run 2 tests on each filament so you can measure them and adjust if needed."
+   read -p "Press [Enter] key to get gcode..."
+   clear
+   cat $Kick_Test_G_File
+   exit 0
+   else
+   echo "Not enough info to create test, rerun script from the top."
+   exit 0
+   fi
+fi   
 
 #############################################
 ######## Gcode creation questions ###########
@@ -115,198 +131,194 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          echo "We need more info about your printer."
          read -p "Press [Enter] to get started..."
          clear
-         intr=0
-         while [ $intr -le 3 ]; do
-            echo "What is your MAX X size in mm?"
-            read -p "[ Enter MAX X ] : " -i $MAXX -e answer
-            if [ -z $answer ]; then
-               echo ""
+         echo "What is your MAX X size in mm?"
+         if [ -z "${MAXX+x}" ] || [ -z $MAXX ]; then
+            read -p "[ mm ]" MAXX
+            if [ -z $MAXX ]; then
                echo "Input cannot be blank."
-               echo ""
-               ((intr++))
-               continue
-           elif [[ $answer != ?(-)+([0-9]) ]]; then
-               echo ""
-               echo "Input has to be a number."
-               echo ""
-               ((intr++))
-               continue
+               exit 0
             fi
-         MAXX=$answer
-         break
-         done
-         if [ $intr -ge 3 ]; then
-            exit 0
+            if [[ $MAXX != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $MAXX mm ]" MAXX
+            MAXX="${MAXX:=$MAXX}"
+            if  [ -z $MAXX ]; then
+               something=false
+            else
+               if [[ $MAXX != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
-         intr=0
-         while [ $intr -le 3 ]; do
-            echo ""
-            echo "What is your MAX Y size in mm?"
-            read -p "[ Enter MAX Y ] : " -i $MAXY -e answer
-            if [ -z $answer ]; then
-               echo ""
+         echo "What is your MAX Y size in mm?"
+         if [ -z "${MAXY+x}" ] || [ -z $MAXY ]; then
+            read -p "[ mm ]" MAXY
+            if [ -z $MAXY ]; then
                echo "Input cannot be blank."
-               echo ""
-               ((intr++))
-               continue
-           elif [[ $answer != ?(-)+([0-9]) ]]; then
-               echo ""
-               echo "Input has to be a number."
-               echo ""
-               ((intr++))
-               continue
+               exit 0
             fi
-         MAXY=$answer
-         break
-         done
-         if [ $intr -ge 3 ]; then
-            exit 0
+            if [[ $MAXY != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $MAXY mm ]" MAXY
+            MAXY="${MAXY:=$MAXY}"
+            if  [ -z $MAXY ]; then
+               something=false
+            else
+               if [[ $MAXY != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
-         intr=0
-         while [ $intr -le 3 ]; do
-            echo ""
-            echo "Enter T0 kick out length in mm"
-            read -p "[ Enter Kick out for T0 ] : " -i $kick0 -e answer
-            if [ -z $answer ]; then
-               echo ""
-               echo "Input cannot be blank."
-               echo ""
-               ((intr++))
-               continue
-           elif [[ $answer != ?(-)+([0-9]) ]]; then
-               echo ""
-               echo "Input has to be a number."
-               echo ""
-               ((intr++))
-               continue
-            fi
-         kick0=$answer
-         break
-         done
-         if [ $intr -ge 3 ]; then
+         echo "Enter T0 kick out length in mm"
+         if  [ -z "${kick0+x}" ] || [ -z $kick0 ]; then
+            read -p "[ mm ]" kick0
+            if [ -z $kick0 ]; then
+            echo "Input cannot be blank."
             exit 0
+            fi
+            if [[ "$kick0" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $kick0 mm ]" kick0
+            kick0="${kick0:=$kick0}"
+            if  [ -z $kick0 ]; then
+               something=false 
+            else
+               if [[ "$kick0" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
-         intr=0
-         while [ $intr -le 3 ]; do
-            echo ""
-            echo "Enter T1 kick out length in mm"
-            read -p "[ Enter Kick out for T1 ] : " -i $kick1 -e answer
-            if [ -z $answer ]; then
-               echo ""
-               echo "Input cannot be blank."
-               echo ""
-               ((intr++))
-               continue
-           elif [[ $answer != ?(-)+([0-9]) ]]; then
-               echo ""
-               echo "Input has to be a number."
-               echo ""
-               ((intr++))
-               continue
-            fi
-         kick1=$answer
-         break
-         done
-         if [ $intr -ge 3 ]; then
+         echo "Enter T1 kick out length in mm"
+         if  [ -z "${kick1+x}" ] || [ -z $kick1 ]; then
+            read -p "[ mm ]" kick1
+            if [ -z $kick1 ]; then
+            echo "Input cannot be blank."
             exit 0
+            fi
+            if [[ "$kick1" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $kick1 mm ]" kick1
+            kick1="${kick1:=$kick1}"
+            if  [ -z $kick1 ]; then
+               something=false
+            else
+               if [[ "$kick1" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
-         intr=0
-         while [ $intr -le 3 ]; do
-            echo ""
-            echo "Enter T2 kick out length in mm"
-            read -p "[ Enter Kick out for T2 ] : " -i $kick2 -e answer
-            if [ -z $answer ]; then
-               echo ""
-               echo "Input cannot be blank."
-               echo ""
-               ((intr++))
-               continue
-           elif [[ $answer != ?(-)+([0-9]) ]]; then
-               echo ""
-               echo "Input has to be a number."
-               echo ""
-               ((intr++))
-               continue
-            fi
-         kick2=$answer
-         break
-         done
-         if [ $intr -ge 3 ]; then
+         echo "Enter T2 kick out length in mm"
+         if  [ -z "${kick2+x}" ] || [ -z $kick2 ]; then
+            read -p "[ mm ]" kick2
+            if [ -z $kick2 ]; then
+            echo "Input cannot be blank."
             exit 0
+            fi
+            if [[ "$kick2" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $kick2 mm ]" kick2
+            kick2="${kick2:=$kick2}"
+            if  [ -z $kick2 ]; then
+               something=false
+            else
+               if [[ "$kick2" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
-         intr=0
-         while [ $intr -le 3 ]; do
-            echo ""
-            echo "Enter T3 kick out length in mm"
-            read -p "[ Enter Kick out for T3 ] : " -i $kick3 -e answer
-            if [ -z $answer ]; then
-               echo ""
-               echo "Input cannot be blank."
-               echo ""
-               ((intr++))
-               continue
-           elif [[ $answer != ?(-)+([0-9]) ]]; then
-               echo ""
-               echo "Input has to be a number."
-               echo ""
-               ((intr++))
-               continue
-            fi
-         kick3=$answer
-         break
-         done
-         if [ $intr -ge 3 ]; then
+         echo "Enter T3 kick out length in mm"
+         if  [ -z "${kick3+x}" ] || [ -z $kick3 ]; then
+            read -p "[ mm ]" kick3
+            if [ -z $kick3 ]; then
+            echo "Input cannot be blank."
             exit 0
-         fi
-         intr=0
-         while [ $intr -le 3 ]; do
-            echo ""
-            echo "What is the length in mm from the top of the extruder coupler to the gears?"
-            read -p "[ Enter lenght in mm ] : " -i $togears -e answer
-            if [ -z $answer ]; then
-               echo ""
-               echo "Input cannot be blank."
-               echo ""
-               ((intr++))
-               continue
-           elif [[ $answer != ?(-)+([0-9]) ]]; then
-               echo ""
-               echo "Input has to be a number."
-               echo ""
-               ((intr++))
-               continue
             fi
-         togears=$answer
-         break
-         done
-         if [ $intr -ge 3 ]; then
-            exit 0
-         fi
-         intr=0
-         while [ $intr -le 3 ]; do
-            echo ""
-            echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
-            read -p "[ Enter lenght in mm ] : " -i $tonozzle -e answer
-            if [ -z $answer ]; then
-               echo ""
-               echo "Input cannot be blank."
-               echo ""
-               ((intr++))
-               continue
-           elif [[ $answer != ?(-)+([0-9]) ]]; then
-               echo ""
+            if [[ "$kick3" != ?(-)+([0-9]) ]]; then
                echo "Input has to be a number."
-               echo ""
-               ((intr++))
-               continue
+               exit 0
             fi
-         tonozzle=$answer
-         break
-         done
-         if [ $intr -ge 3 ]; then
-            exit 0
+         else
+            read -p "[ $kick3 mm ]" kick3
+            kick3="${kick3:=$kick3}"
+            if  [ -z $kick3 ]; then
+               something=false
+            else
+               if [[ "$kick3" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
          fi
 
+         echo "What is the length in mm from the top of the extruder coupler to the gears?"
+         if  [ -z "${togears+x}" ] || [ -z $togears ]; then
+            read -p "[ mm ]" togears
+            if [ -z "$togears" ]; then
+               echo "Input cannot be blank."
+               exit 0
+            fi
+   
+            if [[ "$togears" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $togears mm ]" togears
+            togears="${togears:=$togears}"
+            if  [ -z $togears ]; then
+               something=false
+            else
+               if [[ "$togears" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
+         fi
+         echo "How many mm is it from extruder gripping the filament to nozzle extrusion?"
+         if  [ -z "${tonozzle+x}" ] || [ -z $tonozzle ]; then
+            read -p "[ mm ]" tonozzle
+            if [ -z "$tonozzle" ]; then
+               echo "Input cannot be blank."
+               exit 0
+            fi
+   
+            if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
+               echo "Input has to be a number."
+               exit 0
+            fi
+         else
+            read -p "[ $tonozzle mm ]" tonozzle
+            tonozzle="${tonozzle:=$tonozzle}"
+            if  [ -z $tonozzle ]; then
+               something=false
+            else
+               if [[ "$tonozzle" != ?(-)+([0-9]) ]]; then
+                  echo "Input has to be a number."
+                  exit 0
+               fi
+            fi
+         fi
+	      #Remove all old Gcode TXT files
          if [ -f $Start_G_File ]; then
             rm $Start_G_File
          fi
@@ -330,8 +342,8 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          init_kickout_1=$kick1 #Kick out from testing of T1
          init_kickout_2=$kick2 #Kick out from testing of T2
          init_kickout_3=$kick3 #Kick out from testing of T3
-         feed_to_ext=$togears #this is adding load time to button press
-         gears_to_nozzle=$tonozzle #this is extruder turning only
+         feed_to_ext=$togears
+         gears_to_nozzle=$tonozzle
          but_ini_loc=$((but_press-3)) #get close to the button ready to press it
 
          ############ Save questions answers to parm save file ###################
@@ -375,11 +387,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          purge_line_start_y=$but_ini_loc
          purge_line_end_x=
          purge_line_end_y=
-         extmax=50
-         increment=$(($gears_to_nozzle/$extmax))
-         incrementP1=$((($gears_to_nozzle/$extmax)+1))
-         remainder=$(($gears_to_nozzle%$extmax))
-         gears_to_nozzle_speed=F1000
+         last_backout=$((gears_to_nozzle-100))
 
          ############ Save Math variables to parm save file ###################
 
@@ -441,22 +449,13 @@ G0 $but_axis$but_press F2000 ; press button
 G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
 G0 $but_axis$but_ini_loc F2000 ; move away from button
 M400 ; make sure moves are all done before we load
-SGF1
-for i in $(seq $increment)   # you can also use {0..9}
-do
-  echo "G92 E0" >> $Start_G_File
-  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Start_G_File
-done
-echo "G92 E0" >> $Start_G_File
-echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Start_G_File
-
-cat >> $Start_G_File << SGF2
+G0 E$gears_to_nozzle F1000 ; Load to nozzle
 G0 X$purge_line_start_x Y$purge_line_start_y Z0.2 F1000; move to extruders assigned purge line
 G0 Y0 E50; purge the extruder while moving to Y min.
 G0 X$((purge_line_start_x-1)); purge the extruder.
 G0 Y$but_ini_loc E50; purge the extruder.
 G4 P2000 ; all done
-SGF2
+SGF1
       
          if [[ $firmware == "KLIPPER" ]]; then
             echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Start_G_File
@@ -536,31 +535,25 @@ TGF2
          if [[ $CLI_No_TEMP != "NO_TEMP" ]]; then
 cat >> $Tool_G_File << TGF3
 M106 S125
-M109 R180; cool down to prevent swelling
+M109 S180; cool down to prevent swelling
 G0 E24 F1500 ; last tip dip with cold tip
 G0 E-24 F500 ; last tip dip with cold tip
-M109 R150; cool down to prevent swelling
+M109 S150; cool down to prevent swelling
 M109 S180; ok... go back up in temp so we can move the extruder
-TGF3
-
-for i in $(seq $incrementP1)   # you can also use {0..9}
-do
-  echo "G92 E0" >> $Tool_G_File
-  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tool_G_File
-done
-echo "G92 E0" >> $Tool_G_File
-echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tool_G_File
-
-cat >> $Tool_G_File << TGF4
+G0 E-50 F500 ; back out of the extruder
+G92 E0
+G0 E-50 F500 ; back out of the extruder
+G92 E0
+G0 E-$last_backout F1000 ; continue to back out of the extruder
 M400 ; Wait for extruder to backout
 M107 ;
 M104 S[temperature];
-TGF4
+TGF3
          else
              echo ";NO TEMP SET" >> $Tool_G_File
          fi
 
-cat >> $Tool_G_File << TGF5
+cat >> $Tool_G_File << TGF4
 G0 Y3 F2000
 {if next_extruder==0}
 G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
@@ -620,33 +613,23 @@ G4 $load_sec_3 ;loading extruder {next_extruder}
 G0 Y-3 F2000;
 G4 P400
 M400 ; make sure moves are all done before extruder moves
-TGF5
-
-for i in $(seq $increment)   # you can also use {0..9}
-do
-  echo "G92 E0" >> $Tool_G_File
-  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tool_G_File
-done
-echo "G92 E0" >> $Tool_G_File
-echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tool_G_File
-
-cat >> $Tool_G_File << TGF6
+G0 E$gears_to_nozzle F1000 ; <<<--- adjust this E value to tune extruder loading
 G4 P400
 G92 E0
 M104 S[temperature];
 M106 S125;
-TGF6
+TGF4
          if [[ $firmware == "KLIPPER" ]]; then
             echo "SET_FILAMENT_SENSOR SENSOR=filament_sensor ENABLE=1" >> $Tool_G_File
          fi
-cat >> $Tool_G_File << TGF7
+cat >> $Tool_G_File << TGF5
 G90 ; move to absolute mode
 M83
 {endif}
 {endif}
-TGF7
+TGF5
 
-         #clear
+         clear
          echo ""
          echo -e "That's it!"
          echo -e "Here are the things you need to enter in PRUSA Slicer"
@@ -713,9 +696,7 @@ else
    read -p  "[PRUSA,MARLIN,KLIPPER]" firmware
    USER_ANS1=$(echo "${firmware^^}")
    if [ -z "$USER_ANS1" ]; then
-      echo ""
       echo "Input cannot be blank."
-      echo ""
       exit 0
    fi
 
@@ -728,9 +709,7 @@ else
    read -p "[X or Y]" axis
    USER_ANS2=$(echo "${axis^^}")
    if [ -z "$USER_ANS2" ]; then
-      echo ""
       echo "Input cannot be blank."
-      echo ""
       exit 0
    fi
 
@@ -743,48 +722,36 @@ else
    echo "Where do we have go on the $but_axis axis to click the Chameleon button [in mm]?"
    read -p "[ mm ]" press
    if [ -z "$press" ]; then
-      echo ""
       echo "Input cannot be blank."
-      echo ""
       exit 0
    fi
 
    if [[ "$press" != ?(-)+([0-9]) ]]; then
-      echo ""
       echo "Input has to be a number."
-      echo ""
       exit 0
    fi
    
    echo "What is your filament loading gap in mm? [amount above Y pipe when starting, recommend 25mm]"
    read -p "[mm]" gap
    if [ -z "$gap" ]; then
-      echo ""
       echo "Input cannot be blank."
-      echo ""
       exit 0
    fi
 
    if  [[ "$gap" != ?(-)+([0-9]) ]]; then
-      echo ""
       echo "Input has to be a number."
-      echo ""
       exit 0
    fi
    
    echo "What is the lenght of the tube from the Y pipe to the extruder in mm?"
    read -p "[mm]" etube
    if [ -z "$etube" ]; then
-      echo ""
       echo "Input cannot be blank."
-      echo ""
       exit 0
    fi
 
    if [[ "$etube" != ?(-)+([0-9]) ]]; then
-      echo ""
       echo "Input has to be a number."
-      echo ""
       exit 0
    fi
    
@@ -797,14 +764,14 @@ else
    but_ini_loc=$((but_press-3)) #get close to the button ready to press it
    fil_start_gap=$gap #How far above the Y pipe is you filament start posistion
    ext_feed_tube=$etube #The lenth of the tube to feed extruder measued from black ring on coupler 
-      
+   
    #Send all the setting gathered from questions to answer file for Gcode creation and to answer save file.
    echo "Your firmware is :$firmware" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your button axis is:$but_axis" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your filament starting gap is :$fil_start_gap" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
    echo "Your PTFE tube above the extruder is  :$ext_feed_tube" | tee -a $ANS_FILE $PARM_SAVE >/dev/null
-   
+
    ##############################################   
    ########## END OF TESTING QUESTIONS ##########
    ##############################################
@@ -918,3 +885,177 @@ TGF1
 
    exit 0
 fi
+
+
+#Kick test info#   
+
+cat >> $Kick_Test_G_File << KTF1
+G28 ; home all without mesh bed level
+G90 ;absolute mode
+M83 ;relitive extrusion mode
+G92 E0
+G0 X0 $but_axis$but_ini_loc F2000 ; move to button
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P3200 ; wait for 7 pulses
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P2000 ; wait for it to home
+G0 $but_axis$but_press F2000 ; press button
+G4 $t0dwell ; wait for 550 milliseconds
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P2000 ; all done
+G0 $but_axis$but_press F2000 ; press button
+G4 P7230 ; wait for Y pipe to extruder load time seconds
+G0 $but_axis$but_ini_loc F2000 ; move away from button
+M400 ; make sure moves are all done before we load
+G4 P5000 ; all done
+
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_0 ;unloading extruder 0
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_1 ;loading extruder 1
+G0 Y-3;
+G4 P5000
+
+M400 ; make sure moves are all done before extruder moves
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_1 ;unloading extruder 1
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_2 ;loading extruder 2
+G0 Y-3;
+G4 P5000
+
+M400 ; make sure moves are all done before extruder moves
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_2 ;unloading extruder 2
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_3 ;loading extruder 3
+G0 Y-3;
+G4 P5000
+
+M400 ; make sure moves are all done before extruder moves
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_3 ;unloading extruder 3
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_0 ;loading extruder 0
+G0 Y-3;
+G4 P5000
+
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_0 ;unloading extruder 0
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_1 ;loading extruder 1
+G0 Y-3;
+G4 P5000
+
+M400 ; make sure moves are all done before extruder moves
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_1 ;unloading extruder 1
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_2 ;loading extruder 2
+G0 Y-3;
+G4 P5000
+
+M400 ; make sure moves are all done before extruder moves
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_2 ;unloading extruder 2
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_3 ;loading extruder 3
+G0 Y-3;
+G4 P5000
+
+M400 ; make sure moves are all done before extruder moves
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_3 ;unloading extruder 3
+G0 Y-3
+G4 P400   
+
+KTF1
