@@ -24,6 +24,7 @@ ANS_FILE=ANS_FILE.txt #File to store your test run answers in
 PARM_SAVE=ParmSave_$date.txt
 y_tube_long=115 #measured from black lock ring with PTFE seated
 y_tube_short=80 #2 outside shorter paths
+test_temp=200
 
 if [[ $CLI_Kick_Test == "KICK_TEST" ]]; then
    if [ -z "$USER_ANS" ]; then
@@ -1224,7 +1225,7 @@ echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 cat >> $Tip_G_File << TTF3
 M400 ; Wait for extruder to backout
 M107 ;
-M104 S[temperature];
+M104 S$test_temp;
 
 ;ready for chameleon unload
 
@@ -1299,7 +1300,7 @@ echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 cat >> $Tip_G_File << TTF5
 M400 ; Wait for extruder to backout
 M107 ;
-M104 S[temperature];
+M104 S$test_temp;
 
 ;ready for chameleon unload
 
@@ -1372,7 +1373,7 @@ echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 cat >> $Tip_G_File << TTF7
 M400 ; Wait for extruder to backout
 M107 ;
-M104 S[temperature];
+M104 S$test_temp;
 
 ;ready for chameleon unload
 
@@ -1442,7 +1443,7 @@ echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 cat >> $Tip_G_File << TTF9
 M400 ; Wait for extruder to backout
 M107 ;
-M104 S[temperature];
+M104 S$test_temp;
 
 ;ready for chameleon unload
 
@@ -1511,7 +1512,7 @@ echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 cat >> $Tip_G_File << TTF11
 M400 ; Wait for extruder to backout
 M107 ;
-M104 S[temperature];
+M104 S$test_temp;
 
 ;ready for chameleon unload
 G90 ;absolute mode
@@ -1580,7 +1581,7 @@ echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 cat >> $Tip_G_File << TTF13
 M400 ; Wait for extruder to backout
 M107 ;
-M104 S[temperature];
+M104 S$test_temp;
 
 ;ready for chameleon unload
 G90 ;absolute mode
@@ -1649,7 +1650,7 @@ echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 cat >> $Tip_G_File << TTF15
 M400 ; Wait for extruder to backout
 M107 ;
-M104 S[temperature];
+M104 S$test_temp;
 
 ;ready for chameleon unload
 G90 ;absolute mode
@@ -1718,7 +1719,7 @@ echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
 cat >> $Tip_G_File << TTF17
 M400 ; Wait for extruder to backout
 M107 ;
-M104 S[temperature];
+M104 S$test_temp;
 
 ;ready for chameleon unload
 G90 ;absolute mode
