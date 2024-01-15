@@ -1136,9 +1136,11 @@ KTF1
 
 cat >> $Tip_G_File << TTF1
 G28 ; home all without mesh bed level
+M109 S200
 G90 ;absolute mode
 M83 ;relitive extrusion mode
 G92 E0
+G0 Z100 F2000
 G0 X0 $but_axis$but_ini_loc F2000 ; move to button
 G0 $but_axis$but_press F2000 ; press button
 G4 P150 ; wait for 150 ms
