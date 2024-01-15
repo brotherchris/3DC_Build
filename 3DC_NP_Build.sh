@@ -1755,7 +1755,7 @@ G4 P3200 ; wait for 7 pulses
 G0 $but_axis$but_ini_loc F2000 ; unpress button
 G4 P2000 ; wait for it to home
 M84 ;Turn off motors
-M109 S0;
+M104 S0;
 M107 ;
 TTF17
 
