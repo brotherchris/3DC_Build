@@ -13,11 +13,12 @@ fiffties=8
 
 date=$(date +%Y-%m-%d_%H:%M:%S)
 CLI_No_TEMP=$1  #Pull in CLI parm to take out temp changes
+CLI_Kick_Test=$1
 Start_G_File=Start_Gcode.txt #Text file for your Start gcode
 End_G_File=End_Gcode.txt #Text file for your End gcode
 Tool_G_File=Tool_Gcode.txt #Text file for your Tool change gcode
 Rate4_Test_G_File=Rate4Test_Gcode.txt #Text file for your rate test gcode
-Kick_Test_G_File=Kick_test_Gcode.txt
+Kick_Test_G_File=Kick_Test_Gcode.txt $Kick_Test_G_File
 ANS_FILE=ANS_FILE.txt #File to store your test run answers in
 PARM_SAVE=ParmSave_$date.txt
 y_tube_long=115 #measured from black lock ring with PTFE seated
@@ -691,10 +692,11 @@ TGF7
          echo -e "cat Tool_Gcode.txt"
          echo ""
          echo -e "Good luck!"
-         exit 0
+         
          find $PARM_SAVE -type f -mtime +7 -name 'PARM*.*' -execdir rm -- '{}' \; #remove any parms files older than 7 days
       else
          echo -e "Testing data isn't complete, please restart the script and answer NO"
+         exit 0
       fi
    else
       echo -e "No testing data was found, please restart the script and answer NO"
@@ -1128,3 +1130,4 @@ G0 $but_axis$but_ini_loc F2000 ; unpress button
 G4 P2000 ; wait for it to home
 M84 ;Turn off motors
 KTF1
+exit 0
