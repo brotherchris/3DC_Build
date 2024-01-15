@@ -19,6 +19,7 @@ End_G_File=End_Gcode.txt #Text file for your End gcode
 Tool_G_File=Tool_Gcode.txt #Text file for your Tool change gcode
 Rate4_Test_G_File=Rate4Test_Gcode.txt #Text file for your rate test gcode
 Kick_Test_G_File=Kick_Test_Gcode.txt $Kick_Test_G_File
+Tip_G_File=Tip_Test_Gcode.txt
 ANS_FILE=ANS_FILE.txt #File to store your test run answers in
 PARM_SAVE=ParmSave_$date.txt
 y_tube_long=115 #measured from black lock ring with PTFE seated
@@ -1130,4 +1131,623 @@ G0 $but_axis$but_ini_loc F2000 ; unpress button
 G4 P2000 ; wait for it to home
 M84 ;Turn off motors
 KTF1
+
+#Tip test info#
+
+cat >> $Tip_G_File << TTF1
+G28 ; home all without mesh bed level
+G90 ;absolute mode
+M83 ;relitive extrusion mode
+G92 E0
+G0 X0 $but_axis$but_ini_loc F2000 ; move to button
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P3200 ; wait for 7 pulses
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P2000 ; wait for it to home
+G0 $but_axis$but_press F2000 ; press button
+G4 $t0dwell ; wait for 550 milliseconds
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P2000 ; all done
+G0 $but_axis$but_press F2000 ; press button
+G4 P7230 ; wait for Y pipe to extruder load time seconds
+G0 $but_axis$but_ini_loc F2000 ; move away from button
+M400 ; make sure moves are all done before we load
+G4 P5000 ; all done
+M400 ; make sure moves are all done before we load
+
+;Chameleon loaded
+TTF1
+for i in $(seq $increment)  
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+
+cat >> $Kick_Test_G_File << TTF2
+G4 P5000
+;loaded to hotend
+
+;Unloading and making tip
+G0 E-2 F2400; retract to prevent blobbing
+G92 E0
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+M83
+G92 E0;
+G0 E-25 F500 ; retract a bit, adjust this to tune waste
+G0 E25 F1500 ;
+G0 E-5 F500 ;
+G0 E5 F1500 ;
+G0 E-1 F500 ;
+G0 E1 F1500 ;
+G0 E-25 F500 ;
+M106 S125
+M109 R180; cool down to prevent swelling
+G0 E24 F1500 ; last tip dip with cold tip
+G0 E-24 F500 ; last tip dip with cold tip
+M109 R150; cool down to prevent swelling
+M109 S180; ok... go back up in temp so we can move the extruder
+
+;Tip created
+
+;Time to unload hotend
+TTF2
+
+for i in $(seq $incrementP1)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF3
+M400 ; Wait for extruder to backout
+M107 ;
+M104 S[temperature];
+
+;ready for chameleon unload
+
+
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_0 ;unloading extruder 0
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+
+;Chameleon load
+
+G0 Y3
+G4 $load_sec_1 ;loading extruder 1
+G0 Y-3;
+G4 P5000
+
+
+;Chameleon loaded
+TTF3
+for i in $(seq $increment)  
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF4
+G4 P5000
+;loaded to hotend
+
+;Unloading and making tip
+G0 E-2 F2400; retract to prevent blobbing
+G92 E0
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+M83
+G92 E0;
+G0 E-25 F500 ; retract a bit, adjust this to tune waste
+G0 E25 F1500 ;
+G0 E-5 F500 ;
+G0 E5 F1500 ;
+G0 E-1 F500 ;
+G0 E1 F1500 ;
+G0 E-25 F500 ;
+M106 S125
+M109 R180; cool down to prevent swelling
+G0 E24 F1500 ; last tip dip with cold tip
+G0 E-24 F500 ; last tip dip with cold tip
+M109 R150; cool down to prevent swelling
+M109 S180; ok... go back up in temp so we can move the extruder
+
+;Tip created
+
+;Time to unload hotend
+TTF4
+for i in $(seq $incrementP1)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF5
+M400 ; Wait for extruder to backout
+M107 ;
+M104 S[temperature];
+
+;ready for chameleon unload
+
+
+
+
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_1 ;unloading extruder 1
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_2 ;loading extruder 2
+G0 Y-3;
+G4 P5000
+
+;Chameleon loaded
+TTF5
+for i in $(seq $increment)  
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF6
+G4 P5000
+;loaded to hotend
+
+;Unloading and making tip
+G0 E-2 F2400; retract to prevent blobbing
+G92 E0
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+M83
+G92 E0;
+G0 E-25 F500 ; retract a bit, adjust this to tune waste
+G0 E25 F1500 ;
+G0 E-5 F500 ;
+G0 E5 F1500 ;
+G0 E-1 F500 ;
+G0 E1 F1500 ;
+G0 E-25 F500 ;
+M106 S125
+M109 R180; cool down to prevent swelling
+G0 E24 F1500 ; last tip dip with cold tip
+G0 E-24 F500 ; last tip dip with cold tip
+M109 R150; cool down to prevent swelling
+M109 S180; ok... go back up in temp so we can move the extruder
+
+;Tip created
+
+;Time to unload hotend
+TTF6
+for i in $(seq $incrementP1)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF7
+M400 ; Wait for extruder to backout
+M107 ;
+M104 S[temperature];
+
+;ready for chameleon unload
+
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_2 ;unloading extruder 2
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_3 ;loading extruder 3
+G0 Y-3;
+G4 P5000
+
+;Chameleon loaded
+TTF7
+for i in $(seq $increment)  
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF8
+G4 P5000
+;loaded to hotend
+
+;Unloading and making tip
+G0 E-2 F2400; retract to prevent blobbing
+G92 E0
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+M83
+G92 E0;
+G0 E-25 F500 ; retract a bit, adjust this to tune waste
+G0 E25 F1500 ;
+G0 E-5 F500 ;
+G0 E5 F1500 ;
+G0 E-1 F500 ;
+G0 E1 F1500 ;
+G0 E-25 F500 ;
+M106 S125
+M109 R180; cool down to prevent swelling
+G0 E24 F1500 ; last tip dip with cold tip
+G0 E-24 F500 ; last tip dip with cold tip
+M109 R150; cool down to prevent swelling
+M109 S180; ok... go back up in temp so we can move the extruder
+
+;Tip created
+
+;Time to unload hotend
+TTF8
+for i in $(seq $incrementP1)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF9
+M400 ; Wait for extruder to backout
+M107 ;
+M104 S[temperature];
+
+;ready for chameleon unload
+
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_3 ;unloading extruder 3
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_0 ;loading extruder 0
+G0 Y-3;
+G4 P5000
+;Chameleon loaded
+TTF9
+for i in $(seq $increment)  
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF10
+G4 P5000
+;loaded to hotend
+
+;Unloading and making tip
+G0 E-2 F2400; retract to prevent blobbing
+G92 E0
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+M83
+G92 E0;
+G0 E-25 F500 ; retract a bit, adjust this to tune waste
+G0 E25 F1500 ;
+G0 E-5 F500 ;
+G0 E5 F1500 ;
+G0 E-1 F500 ;
+G0 E1 F1500 ;
+G0 E-25 F500 ;
+M106 S125
+M109 R180; cool down to prevent swelling
+G0 E24 F1500 ; last tip dip with cold tip
+G0 E-24 F500 ; last tip dip with cold tip
+M109 R150; cool down to prevent swelling
+M109 S180; ok... go back up in temp so we can move the extruder
+
+;Tip created
+
+;Time to unload hotend
+TTF10
+for i in $(seq $incrementP1)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF11
+M400 ; Wait for extruder to backout
+M107 ;
+M104 S[temperature];
+
+;ready for chameleon unload
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_0 ;unloading extruder 0
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_1 ;loading extruder 1
+G0 Y-3;
+G4 P5000
+
+;Chameleon loaded
+TTF11
+for i in $(seq $increment)  
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF12
+G4 P5000
+;loaded to hotend
+
+;Unloading and making tip
+G0 E-2 F2400; retract to prevent blobbing
+G92 E0
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+M83
+G92 E0;
+G0 E-25 F500 ; retract a bit, adjust this to tune waste
+G0 E25 F1500 ;
+G0 E-5 F500 ;
+G0 E5 F1500 ;
+G0 E-1 F500 ;
+G0 E1 F1500 ;
+G0 E-25 F500 ;
+M106 S125
+M109 R180; cool down to prevent swelling
+G0 E24 F1500 ; last tip dip with cold tip
+G0 E-24 F500 ; last tip dip with cold tip
+M109 R150; cool down to prevent swelling
+M109 S180; ok... go back up in temp so we can move the extruder
+
+;Tip created
+
+;Time to unload hotend
+TTF12
+for i in $(seq $incrementP1)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF13
+M400 ; Wait for extruder to backout
+M107 ;
+M104 S[temperature];
+
+;ready for chameleon unload
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_1 ;unloading extruder 1
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_2 ;loading extruder 2
+G0 Y-3;
+G4 P5000
+
+;Chameleon loaded
+TTF13
+for i in $(seq $increment)  
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF14
+G4 P5000
+;loaded to hotend
+
+;Unloading and making tip
+G0 E-2 F2400; retract to prevent blobbing
+G92 E0
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+M83
+G92 E0;
+G0 E-25 F500 ; retract a bit, adjust this to tune waste
+G0 E25 F1500 ;
+G0 E-5 F500 ;
+G0 E5 F1500 ;
+G0 E-1 F500 ;
+G0 E1 F1500 ;
+G0 E-25 F500 ;
+M106 S125
+M109 R180; cool down to prevent swelling
+G0 E24 F1500 ; last tip dip with cold tip
+G0 E-24 F500 ; last tip dip with cold tip
+M109 R150; cool down to prevent swelling
+M109 S180; ok... go back up in temp so we can move the extruder
+
+;Tip created
+
+;Time to unload hotend
+TTF14
+for i in $(seq $incrementP1)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF15
+M400 ; Wait for extruder to backout
+M107 ;
+M104 S[temperature];
+
+;ready for chameleon unload
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_2 ;unloading extruder 2
+G0 Y-3
+G4 P400
+M400 ;Make sure everything is done on unload
+G0 Y3
+G4 $load_sec_3 ;loading extruder 3
+G0 Y-3;
+G4 P5000
+
+;Chameleon loaded
+TTF15
+for i in $(seq $increment)  
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF16
+G4 P5000
+;loaded to hotend
+
+;Unloading and making tip
+G0 E-2 F2400; retract to prevent blobbing
+G92 E0
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+M83
+G92 E0;
+G0 E-25 F500 ; retract a bit, adjust this to tune waste
+G0 E25 F1500 ;
+G0 E-5 F500 ;
+G0 E5 F1500 ;
+G0 E-1 F500 ;
+G0 E1 F1500 ;
+G0 E-25 F500 ;
+M106 S125
+M109 R180; cool down to prevent swelling
+G0 E24 F1500 ; last tip dip with cold tip
+G0 E-24 F500 ; last tip dip with cold tip
+M109 R150; cool down to prevent swelling
+M109 S180; ok... go back up in temp so we can move the extruder
+
+;Tip created
+
+;Time to unload hotend
+TTF16
+for i in $(seq $incrementP1)   # you can also use {0..9}
+do
+  echo "G92 E0" >> $Tip_G_File
+  echo "G0 E-"$extmax " $gears_to_nozzle_speed" >> $Tip_G_File
+done
+echo "G92 E0" >> $Tip_G_File
+echo "G0 E-"$remainder " $gears_to_nozzle_speed" >> $Tip_G_File
+cat >> $Kick_Test_G_File << TTF17
+M400 ; Wait for extruder to backout
+M107 ;
+M104 S[temperature];
+
+;ready for chameleon unload
+G90 ;absolute mode
+G0 $but_axis$but_ini_loc F2000 ; <<----- EDIT THIS LINE TO SET THE INITIAL LOCATION OF THE BUTTON
+G91 ; move to relative mode
+G0 Y3 F2000
+G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single pulse time
+G0 Y-3
+G4 P400
+G0 Y3
+G4 $load_sec_3 ;unloading extruder 3
+G0 Y-3
+G4 P400
+
+G90 ;absolute mode
+M83 ;relitive extrusion mode
+G92 E0
+G0 X0 $but_axis$but_ini_loc F2000 ; move to button
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P150 ; wait for 150 ms
+G0 $but_axis$but_press F2000 ; press button
+G4 P3200 ; wait for 7 pulses
+G0 $but_axis$but_ini_loc F2000 ; unpress button
+G4 P2000 ; wait for it to home
+M84 ;Turn off motors
+TTF17
+
 exit 0
