@@ -968,7 +968,7 @@ G4 $t0dwell ; wait for 550 milliseconds
 G0 $but_axis$but_ini_loc F2000 ; unpress button
 G4 P2000 ; all done
 G0 $but_axis$but_press F2000 ; press button
-G4 P7230 ; wait for Y pipe to extruder load time seconds
+G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
 G0 $but_axis$but_ini_loc F2000 ; move away from button
 M400 ; make sure moves are all done before we load
 G4 P5000 ; all done
@@ -981,6 +981,7 @@ G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pul
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_0 ;unloading extruder 0
 G0 Y-3
 G4 P400
@@ -1052,6 +1053,7 @@ G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pul
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_0 ;unloading extruder 0
 G0 Y-3
 G4 P400
@@ -1168,6 +1170,7 @@ G4 $t0dwell ; wait for 550 milliseconds
 G0 $but_axis$but_ini_loc F2000 ; unpress button
 G4 P2000 ; all done
 G0 $but_axis$but_press F2000 ; press button
+M84 E;
 G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
 G0 $but_axis$but_ini_loc F2000 ; move away from button
 M400 ; make sure moves are all done before we load
@@ -1238,6 +1241,7 @@ G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pul
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_0 ;unloading extruder 0
 G0 Y-3
 G4 P400
@@ -1246,6 +1250,7 @@ M400 ;Make sure everything is done on unload
 ;Chameleon load
 
 G0 Y3
+M84 E;
 G4 $load_sec_1 ;loading extruder 1
 G0 Y-3;
 G4 P5000
@@ -1315,11 +1320,13 @@ G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three p
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_1 ;unloading extruder 1
 G0 Y-3
 G4 P400
 M400 ;Make sure everything is done on unload
 G0 Y3
+M84 E;
 G4 $load_sec_2 ;loading extruder 2
 G0 Y-3;
 G4 P5000
@@ -1385,11 +1392,13 @@ G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pu
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_2 ;unloading extruder 2
 G0 Y-3
 G4 P400
 M400 ;Make sure everything is done on unload
 G0 Y3
+M84 E;
 G4 $load_sec_3 ;loading extruder 3
 G0 Y-3;
 G4 P5000
@@ -1455,11 +1464,13 @@ G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single p
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_3 ;unloading extruder 3
 G0 Y-3
 G4 P400
 M400 ;Make sure everything is done on unload
 G0 Y3
+M84 E;
 G4 $load_sec_0 ;loading extruder 0
 G0 Y-3;
 G4 P5000
@@ -1523,11 +1534,13 @@ G4 $t1dwell ; dwell for 1.0 seconds - adjust this to match your machines two pul
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_0 ;unloading extruder 0
 G0 Y-3
 G4 P400
 M400 ;Make sure everything is done on unload
 G0 Y3
+M84 E;
 G4 $load_sec_1 ;loading extruder 1
 G0 Y-3;
 G4 P5000
@@ -1592,11 +1605,13 @@ G4 $t2dwell ; dwell for 1.5 seconds - adjust this to match your machines three p
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_1 ;unloading extruder 1
 G0 Y-3
 G4 P400
 M400 ;Make sure everything is done on unload
 G0 Y3
+M84 E;
 G4 $load_sec_2 ;loading extruder 2
 G0 Y-3;
 G4 P5000
@@ -1661,11 +1676,13 @@ G4 $t3dwell ; dwell for 2.0 seconds - adjust this to match your machines four pu
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_2 ;unloading extruder 2
 G0 Y-3
 G4 P400
 M400 ;Make sure everything is done on unload
 G0 Y3
+M84 E;
 G4 $load_sec_3 ;loading extruder 3
 G0 Y-3;
 G4 P5000
@@ -1730,6 +1747,7 @@ G4 $t0dwell ; dwell for .5 seconds - adjust this to match your machines single p
 G0 Y-3
 G4 P400
 G0 Y3
+M84 E;
 G4 $load_sec_3 ;unloading extruder 3
 G0 Y-3
 G4 P400
