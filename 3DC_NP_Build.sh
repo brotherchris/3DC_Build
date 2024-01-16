@@ -432,6 +432,19 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          fi
 
 cat >> $Start_G_File << SGF1
+;"Your firmware is :$firmware"
+;"Your button axis is:$but_axis"
+;"You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press"
+;"Your filament starting gap is :$fil_start_gap"
+;"Your PTFE tube above the extruder is  :$ext_feed_tube"
+;"Max printer size X is : $MAXX"
+;"Max printer size Y is : $MAXY"
+;"Kick out T0 is : $kick0"
+;"Kick out T1 is : $kick1"
+;"Kick out T2 is : $kick2"
+;"Kick out T3 is : $kick3"
+;"Top of extruder coupler to gears : $togears"
+;"How many mm from gear to hotend to start extruding : $tonozzle"
 G90 ;absolute mode
 M83 ;relitive extrusion mode
 G92 E0
@@ -846,6 +859,11 @@ else
    fi
 
 cat >> $Rate4_Test_G_File << TGF1
+;"Your firmware is :$firmware"
+;"Your button axis is:$but_axis"
+;"You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press"
+;"Your filament starting gap is :$fil_start_gap"
+;"Your PTFE tube above the extruder is  :$ext_feed_tube"
 G28 ;We will home 3 times incase sensorless hoking is having issues
 G28
 G28
@@ -942,6 +960,19 @@ fi
 #Kick test info#   
 
 cat >> $Kick_Test_G_File << KTF1
+;"Your firmware is :$firmware"
+;"Your button axis is:$but_axis"
+;"You have to go to $but_press on the $but_axis to press the Chameleon button :$but_press"
+;"Your filament starting gap is :$fil_start_gap"
+;"Your PTFE tube above the extruder is  :$ext_feed_tube"
+;"Max printer size X is : $MAXX"
+;"Max printer size Y is : $MAXY"
+;"Kick out T0 is : $kick0"
+;"Kick out T1 is : $kick1"
+;"Kick out T2 is : $kick2"
+;"Kick out T3 is : $kick3"
+;"Top of extruder coupler to gears : $togears"
+;"How many mm from gear to hotend to start extruding : $tonozzle"
 G28 ; home all without mesh bed level
 G90 ;absolute mode
 M83 ;relitive extrusion mode
