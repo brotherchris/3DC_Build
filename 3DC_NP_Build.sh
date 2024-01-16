@@ -1168,7 +1168,7 @@ G4 $t0dwell ; wait for 550 milliseconds
 G0 $but_axis$but_ini_loc F2000 ; unpress button
 G4 P2000 ; all done
 G0 $but_axis$but_press F2000 ; press button
-G4 P7230 ; wait for Y pipe to extruder load time seconds
+G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
 G0 $but_axis$but_ini_loc F2000 ; move away from button
 M400 ; make sure moves are all done before we load
 G4 P5000 ; all done
