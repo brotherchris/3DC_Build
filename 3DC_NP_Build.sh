@@ -403,7 +403,7 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          incrementP1=$((($gears_to_nozzle/$extmax)+1))
          remainder=$(($gears_to_nozzle%$extmax))
          gears_to_nozzle_speed=F1000
-         handoff_load=25 #25mm per second
+         handoff_load=E25 #25mm per second
          handoff_feedrate=F1500 #25mm per second
 
 
@@ -478,7 +478,7 @@ G0 $but_axis$but_ini_loc F2000 ; unpress button
 G4 P2000 ; all done
 G0 $but_axis$but_press F2000 ; press button
 G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
-G0 $handoff_load" " $handoff_feedrate
+G0 $handoff_load $handoff_feedrate
 G0 $but_axis$but_ini_loc F2000 ; move away from button
 M400 ; make sure moves are all done before we load
 SGF1
@@ -644,22 +644,22 @@ M400 ;Make sure everything is done on unload
 {if next_extruder==0}
 G0 Y3 F2000
 G4 $load_sec_0 ;loading extruder {next_extruder}
-G0 $handoff_load" " $handoff_feedrate
+G0 $handoff_load $handoff_feedrate
 {endif}
 {if next_extruder==1}
 G0 Y3 F2000
 G4 $load_sec_1 ;loading extruder {next_extruder}
-G0 $handoff_load" " $handoff_feedrate
+G0 $handoff_load $handoff_feedrate
 {endif}
 {if next_extruder==2}
 G0 Y3 F2000
 G4 $load_sec_2 ;loading extruder {next_extruder}
-G0 $handoff_load" " $handoff_feedrate
+G0 $handoff_load $handoff_feedrate
 {endif}
 {if next_extruder==3}
 G0 Y3 F2000
 G4 $load_sec_3 ;loading extruder {next_extruder}
-G0 $handoff_load" " $handoff_feedrate
+G0 $handoff_load $handoff_feedrate
 {endif}
 G0 Y-3 F2000;
 G4 P400
