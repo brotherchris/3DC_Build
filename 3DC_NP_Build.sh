@@ -386,10 +386,14 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
             load_to_gear_3=$(echo "scale=1;$feed_to_ext+$short_travel" | bc )
          fi
 
-         load_sec_0="P"$(echo "scale=2;(($load_to_gear_0/$fil_feed_rate_0)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-         load_sec_1="P"$(echo "scale=2;(($load_to_gear_1/$fil_feed_rate_1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-         load_sec_2="P"$(echo "scale=2;(($load_to_gear_2/$fil_feed_rate_2)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
-         load_sec_3="P"$(echo "scale=2;(($load_to_gear_3/$fil_feed_rate_3)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         unload_sec_0="P"$(echo "scale=2;(($load_to_gear_0/$fil_feed_rate_0)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         unload_sec_1="P"$(echo "scale=2;(($load_to_gear_1/$fil_feed_rate_1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         unload_sec_2="P"$(echo "scale=2;(($load_to_gear_2/$fil_feed_rate_2)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         unload_sec_3="P"$(echo "scale=2;(($load_to_gear_3/$fil_feed_rate_3)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_0="P"$(echo "scale=2;((($load_to_gear_0/$fil_feed_rate_0)-1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_1="P"$(echo "scale=2;((($load_to_gear_1/$fil_feed_rate_1)-1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_2="P"$(echo "scale=2;((($load_to_gear_2/$fil_feed_rate_2)-1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
+         load_sec_3="P"$(echo "scale=2;((($load_to_gear_3/$fil_feed_rate_3)-1)*1000)/1" | bc | sed -E -e 's!(\.[0-9]*[1-9])0*$!\1!' -e 's!(\.0*)$!!' )
          purge_line_start_x=$printer_x_size
          purge_line_start_y=$but_ini_loc
          purge_line_end_x=
@@ -399,6 +403,9 @@ if [ $USER_ANS == "Y" ]; then  #Start building All the gcode files
          incrementP1=$((($gears_to_nozzle/$extmax)+1))
          remainder=$(($gears_to_nozzle%$extmax))
          gears_to_nozzle_speed=F1000
+         handoff_load=25 #25mm per second
+         handoff_feedrate=F1500 #25mm per second
+
 
          ############ Save Math variables to parm save file ###################
 
@@ -471,6 +478,7 @@ G0 $but_axis$but_ini_loc F2000 ; unpress button
 G4 P2000 ; all done
 G0 $but_axis$but_press F2000 ; press button
 G4 $load_sec_0 ; wait for Y pipe to extruder load time seconds
+G0 $handoff_load" " $handoff_feedrate
 G0 $but_axis$but_ini_loc F2000 ; move away from button
 M400 ; make sure moves are all done before we load
 SGF1
@@ -610,25 +618,25 @@ G0 Y-3 F2000
 G4 P400
 G0 Y3 F2000
 {if current_extruder==0}
-G4 $load_sec_0 ;unloading extruder {current_extruder}
+G4 $unload_sec_0 ;unloading extruder {current_extruder}
 G0 Y-3 F2000
 G4 P400
 M400 ;Make sure everything is done on unload
 {endif}
 {if current_extruder==1}
-G4 $load_sec_1 ;unloading extruder {current_extruder}
+G4 $unload_sec_1 ;unloading extruder {current_extruder}
 G0 Y-3 F2000
 G4 P400
 M400 ;Make sure everything is done on unload
 {endif}
 {if current_extruder==2}
-G4 $load_sec_2 ;unloading extruder {current_extruder}
+G4 $unload_sec_2 ;unloading extruder {current_extruder}
 G0 Y-3 F2000
 G4 P400
 M400 ;Make sure everything is done on unload
 {endif}
 {if current_extruder==3}
-G4 $load_sec_3 ;unloading extruder {current_extruder}
+G4 $unload_sec_3 ;unloading extruder {current_extruder}
 G0 Y-3 F2000
 G4 P400
 M400 ;Make sure everything is done on unload
@@ -636,18 +644,22 @@ M400 ;Make sure everything is done on unload
 {if next_extruder==0}
 G0 Y3 F2000
 G4 $load_sec_0 ;loading extruder {next_extruder}
+G0 $handoff_load" " $handoff_feedrate
 {endif}
 {if next_extruder==1}
 G0 Y3 F2000
 G4 $load_sec_1 ;loading extruder {next_extruder}
+G0 $handoff_load" " $handoff_feedrate
 {endif}
 {if next_extruder==2}
 G0 Y3 F2000
 G4 $load_sec_2 ;loading extruder {next_extruder}
+G0 $handoff_load" " $handoff_feedrate
 {endif}
 {if next_extruder==3}
 G0 Y3 F2000
 G4 $load_sec_3 ;loading extruder {next_extruder}
+G0 $handoff_load" " $handoff_feedrate
 {endif}
 G0 Y-3 F2000;
 G4 P400
